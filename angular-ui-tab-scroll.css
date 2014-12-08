@@ -1,0 +1,70 @@
+.ui-tabs-scrollable {
+  position: relative;
+}
+
+.ui-tabs-scrollable .nav-tabs {
+  white-space: nowrap;
+  overflow: hidden;
+  height: 42px!important;
+  border-bottom: 0!important;
+}
+
+.ui-tabs-scrollable .spacer:not(.hidden-buttons) {
+  margin-left: 25px;
+  margin-right: 25px;
+}
+
+.ui-tabs-scrollable .spacer:not(.hidden-buttons) .tab-content {
+  margin-left: -25px;
+  margin-right: -25px;
+}
+
+.ui-tabs-scrollable .nav > li {
+  float: none;
+  display: inline-block;
+  height: 42px!important;
+  border-bottom: 1px solid #ddd;
+}
+
+.ui-tabs-scrollable .spacer:not(.hidden-buttons) .nav > li:first-child.active a,
+.ui-tabs-scrollable .spacer:not(.hidden-buttons) .nav > li:first-child a:hover {
+  border-top-left-radius: 0!important;
+  border-left: 1px solid transparent;
+}
+
+.ui-tabs-scrollable .spacer:not(.hidden-buttons) .nav > li:last-child.active a,
+.ui-tabs-scrollable .spacer:not(.hidden-buttons) .nav > li:last-child a:hover {
+  border-top-right-radius: 0!important;
+  border-right: 1px solid transparent;
+  margin-right: -1px;
+}
+
+.ui-tabs-scrollable .nav-button {
+  position: absolute;
+  width: 25px;
+  height: 42px!important;
+  line-height: 42px;
+  top: 0;
+  color: #428bca;
+  cursor: pointer;
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 0!important;
+  padding: 0!important;
+  background-color: #fff;
+  z-index: 10;
+}
+
+.ui-tabs-scrollable .nav-button:hover {
+  background-color: #eee;
+}
+
+.ui-tabs-scrollable .left-nav-button {
+  left: 0;
+  border-top-left-radius: 4px!important;
+}
+
+.ui-tabs-scrollable .right-nav-button {
+  right: 0;
+  border-top-right-radius: 4px!important;
+}
