@@ -10,7 +10,7 @@ angular.module('ui.tab.scroll', [])
           $interval.cancel(timeoutId);
           timeoutId = null;
         }
-    }
+    };
 
     var bindHoldFunctionTo = function(element, fn) {
 
@@ -116,7 +116,7 @@ angular.module('ui.tab.scroll', [])
             var nodeObj = $(node);
             var nodeContainer = nodeObj.parentsUntil('ul');
 
-            if(nodeContainer.offset().left > 0) return;
+            if(nodeContainer.offset().left > $scope.baseLeft) return;
 
             var html = nodeObj.html().trim();
             if(html) {
@@ -138,9 +138,12 @@ angular.module('ui.tab.scroll', [])
             var nodeContainer = nodeObj.parentsUntil('ul');
             var nodeWidth = nodeContainer.offset().left;
 
-            if(nodeWidth < $scope.tabWidth) return;
+            if(nodeWidth < $scope.tabWidth + $scope.baseLeft) return;
 
-            nodes.push(nodeObj.html());
+            var html = nodeObj.html().trim();
+            if(html) {
+              nodes.push(html);
+            }
 
           });
 
@@ -164,6 +167,8 @@ angular.module('ui.tab.scroll', [])
           var $rightNav = $el.find('.right-nav-button');
           var $tabs = $scope.tabContainer = $el.find('.spacer').find('ul.nav.nav-tabs');
 
+          $scope.baseLeft = $el.offset().left;
+
           var tabContainerWidth = $scope.tabContainerWidth = $tabs[0].scrollWidth;
           var tabWidth = $scope.tabWidth = $tabs.width();
           var tabScrollWidth = tabWidth / 6;
@@ -186,7 +191,7 @@ angular.module('ui.tab.scroll', [])
         $(window).on('resize', initAndApply);
 
         //even if one doesn't exist, we can still initialize w/ this
-        $scope.$watch(function(){return $scope.watchExpression;}, function(newVal, oldVal) {
+        $scope.$watch(function(){return $scope.watchExpression;}, function() {
           $timeout(initAndApply, 0);
         }, true);
 
