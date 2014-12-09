@@ -12,13 +12,11 @@ angular.module('ui.tab.scroll', [])
         }
     }
 
-    var unbindFunctions = function(el, cache) {
-      if(!cache) return;
-      el.off('mousedown', cache.mouseDown);
-      el.off('mouseup', cache.mouseUp);
-    };
-
     var bindHoldFunctionTo = function(element, fn) {
+
+      //get rid of the previous scroll function
+      element.unbind('mousedown');
+      element.unbind('mouseup');
 
       var isHolding = false;
 
@@ -31,7 +29,7 @@ angular.module('ui.tab.scroll', [])
           if(isHolding) {
             fn();
 
-            if($(element).is(":disabled")) {
+            if(element.is(':disabled')) {
               cancelId();
             }
           }
@@ -45,17 +43,17 @@ angular.module('ui.tab.scroll', [])
 
       element.on('mousedown', mouseDown);
       element.on('mouseup', mouseUp);
-
-      return {mouseDown: mouseDown, mouseUp: mouseUp};
-
     };
 
     return {
       restrict: 'AE',
       transclude: true,
+
       scope: {
-         showTooltips: "="
+         showTooltips: '=',
+         watchExpression: '='
       },
+
       template: [
         '<div class="ui-tabs-scrollable">',
           '<button ng-hide="hideButtons" ng-disabled="disableLeft()" class="btn nav-button left-nav-button" tooltip-placement="bottom" tooltip-html-unsafe="{{tooltipLeftContent()}}">',
@@ -67,11 +65,8 @@ angular.module('ui.tab.scroll', [])
           '</button>',
         '</div>'
         ].join(''),
-      link: function($scope, $el) {
 
-        $scope.currentOffset = 0;
-        $scope.leftFunction = null;
-        $scope.rightFunction = null;
+      link: function($scope, $el) {
 
         $scope.toTheLeftHTML = '';
         $scope.toTheRightHTML = '';
@@ -99,31 +94,38 @@ angular.module('ui.tab.scroll', [])
 
         $scope.toTheLeft = function() {
           if(!$scope.tabContainer) return;
+
           var nodes = [];
           $scope.tabContainer.find(selector).each(function(index, node) {
+
             var nodeObj = $(node);
-            var nodeContainer = nodeObj.parentsUntil("ul");
+            var nodeContainer = nodeObj.parentsUntil('ul');
 
             if(nodeContainer.offset().left > 0) return;
 
             nodes.push(nodeObj.html());
+
           });
+
           $scope.toTheLeftHTML = nodes.join('<br>');
         };
 
         $scope.toTheRight = function() {
           if(!$scope.tabContainer) return;
+
           var nodes = [];
           $scope.tabContainer.find(selector).each(function(index, node) {
-            var nodeObj = $(node);
-            var nodeContainer = nodeObj.parentsUntil("ul");
 
+            var nodeObj = $(node);
+            var nodeContainer = nodeObj.parentsUntil('ul');
             var nodeWidth = nodeContainer.offset().left;
-            
+
             if(nodeWidth < $scope.tabWidth) return;
 
             nodes.push(nodeObj.html());
+
           });
+
           $scope.toTheRightHTML = nodes.join('<br>');
         };
 
@@ -134,15 +136,15 @@ angular.module('ui.tab.scroll', [])
 
         var generateScrollFunction = function(el, offset) {
           return function() {
-            $scope.currentOffset = Math.min($scope.tabContainerWidth, Math.max(0, el.scrollLeft += offset));
+            el.scrollLeft += offset;
             $scope.recalcSides();
           };
         };
 
         var init = function() {
-          var $leftNav = $el.find(".left-nav-button");
-          var $rightNav = $el.find(".right-nav-button");
-          var $tabs = $scope.tabContainer = $el.find(".spacer").find("ul.nav.nav-tabs");
+          var $leftNav = $el.find('.left-nav-button');
+          var $rightNav = $el.find('.right-nav-button');
+          var $tabs = $scope.tabContainer = $el.find('.spacer').find('ul.nav.nav-tabs');
 
           var tabContainerWidth = $scope.tabContainerWidth = $tabs[0].scrollWidth;
           var tabWidth = $scope.tabWidth = $tabs.width();
@@ -151,24 +153,24 @@ angular.module('ui.tab.scroll', [])
 
           $scope.hideButtons = tabContainerWidth === tabWidth;
 
-          $scope.leftFunction = generateScrollFunction(realTabs, -tabScrollWidth);
-          $scope.rightfunction = generateScrollFunction(realTabs, tabScrollWidth);
-
-          unbindFunctions($leftNav, $scope.leftFunctionCache);
-          unbindFunctions($rightNav, $scope.rightFunctionCache);
-
-          $scope.leftFunctionCache = bindHoldFunctionTo($leftNav, $scope.leftFunction);
-          $scope.rightfunctionCache = bindHoldFunctionTo($rightNav, $scope.rightfunction);
+          bindHoldFunctionTo($leftNav, generateScrollFunction(realTabs, -tabScrollWidth));
+          bindHoldFunctionTo($rightNav, generateScrollFunction(realTabs, tabScrollWidth));
 
           $scope.recalcSides();
         };
 
-        $timeout(init, 0);
-
-        $(window).on('resize', function() {
+        var initAndApply = function() {
           init();
           $scope.$apply();
-        });
+        };
+
+        //hello my friend jake weary
+        $(window).on('resize', initAndApply);
+
+        //even if one doesn't exist, we can still initialize w/ this
+        $scope.$watch(function(){return $scope.watchExpression;}, function(newVal, oldVal) {
+          $timeout(initAndApply, 0);
+        }, true);
 
       }
     };

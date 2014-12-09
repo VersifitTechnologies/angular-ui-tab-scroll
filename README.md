@@ -18,11 +18,11 @@ Usage
 * Wrap your `<tabset>` inside of `<scrollable-tabset>`, like so:
 
 ```html
-<scrollable-tabset show-tooltips="true">
+<scrollable-tabset show-tooltips="true" watch-expression="tabs">
   <tabset>
-    <tab ng-repeat="x in y">...</tab>
+    <tab ng-repeat="x in tabs">...</tab>
   </tabset>
 </scrollable-tabset>
 ```
 
-You can turn tooltips on and off with the `show-tooltips` attribute.
+You can turn tooltips on and off with the `show-tooltips` attribute, and if your tabs aren't static, you may want to specify `watch-expression`.
