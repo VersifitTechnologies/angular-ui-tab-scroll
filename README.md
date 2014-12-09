@@ -24,5 +24,10 @@ Usage
   </tabset>
 </scrollable-tabset>
 ```
-
-You can turn tooltips on and off with the `show-tooltips` attribute, and if your tabs aren't static, you may want to specify `watch-expression`.
+Options
+=======
+* `show-tooltips` - whether or not to show the side-tooltips
+* `watch-expression` - an expression to watch for changes, to update the tab left/right buttons
+* `tooltipLeft` - which tooltip direction to use for the left tooltip (bottom, top, left, right) - defaults to bottom
+* `tooltipRight` - which tooltip direction to use for the right tooltip (bottom, top, left, right) - defaults to bottom
+* `tooltipTextSelector` - the selector for your tooltips, defaults to `*:not(:has("*:not(span)"))`

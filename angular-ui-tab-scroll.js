@@ -50,17 +50,20 @@ angular.module('ui.tab.scroll', [])
       transclude: true,
 
       scope: {
-         showTooltips: '=',
-         watchExpression: '='
+        showTooltips: '=',
+        watchExpression: '=',
+        tooltipLeft: '=',
+        tooltipRight: '=',
+        tooltipTextSelector: '='
       },
 
       template: [
         '<div class="ui-tabs-scrollable">',
-          '<button ng-hide="hideButtons" ng-disabled="disableLeft()" class="btn nav-button left-nav-button" tooltip-placement="bottom" tooltip-html-unsafe="{{tooltipLeftContent()}}">',
+          '<button ng-hide="hideButtons" ng-disabled="disableLeft()" class="btn nav-button left-nav-button" tooltip-placement="{{tooltipLeftDirection()}}" tooltip-html-unsafe="{{tooltipLeftContent()}}">',
             '<span class="glyphicon glyphicon-chevron-left"></span>',
           '</button>',
           '<div class="spacer" ng-class="{\'hidden-buttons\': hideButtons}" ng-transclude></div>',
-          '<button ng-hide="hideButtons" ng-disabled="disableRight()" class="btn nav-button right-nav-button" tooltip-placement="bottom" tooltip-html-unsafe="{{tooltipRightContent()}}">',
+          '<button ng-hide="hideButtons" ng-disabled="disableRight()" class="btn nav-button right-nav-button" tooltip-placement="{{tooltipRightDirection()}}" tooltip-html-unsafe="{{tooltipRightContent()}}">',
             '<span class="glyphicon glyphicon-chevron-right"></span>',
           '</button>',
         '</div>'
@@ -87,23 +90,38 @@ angular.module('ui.tab.scroll', [])
           return $scope.showTooltips ? $scope.toTheRightHTML : '';
         };
 
+        $scope.tooltipLeftDirection = function() {
+          return $scope.tooltipLeft ? $scope.tooltipLeft : 'bottom';
+        };
+
+        $scope.tooltipRightDirection = function() {
+          return $scope.tooltipRight ? $scope.tooltipRight : 'bottom';
+        };
+
         //select the innermost child that isn't a span
         //this way we cover getting <tab-heading> and <tab heading=''>
         //but leave other markup out of it, unless it's a span (commonly an icon)
         var selector = '*:not(:has("*:not(span)"))';
 
+        $scope.getSelector = function() {
+          return $scope.tooltipTextSelector ? $scope.tooltipTextSelector : selector;
+        };
+
         $scope.toTheLeft = function() {
           if(!$scope.tabContainer) return;
 
           var nodes = [];
-          $scope.tabContainer.find(selector).each(function(index, node) {
+          $scope.tabContainer.find($scope.getSelector()).each(function(index, node) {
 
             var nodeObj = $(node);
             var nodeContainer = nodeObj.parentsUntil('ul');
 
             if(nodeContainer.offset().left > 0) return;
 
-            nodes.push(nodeObj.html());
+            var html = nodeObj.html().trim();
+            if(html) {
+              nodes.push(html);
+            }
 
           });
 
@@ -114,7 +132,7 @@ angular.module('ui.tab.scroll', [])
           if(!$scope.tabContainer) return;
 
           var nodes = [];
-          $scope.tabContainer.find(selector).each(function(index, node) {
+          $scope.tabContainer.find($scope.getSelector()).each(function(index, node) {
 
             var nodeObj = $(node);
             var nodeContainer = nodeObj.parentsUntil('ul');
