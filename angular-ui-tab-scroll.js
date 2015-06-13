@@ -54,17 +54,19 @@ angular.module('ui.tab.scroll', [])
         watchExpression: '=',
         tooltipLeft: '=',
         tooltipRight: '=',
-        tooltipTextSelector: '='
+        tooltipTextSelector: '=',
+        scrollLeftIcon: '=',
+        scrollRightIcon: '='
       },
 
       template: [
         '<div class="ui-tabs-scrollable">',
           '<button type="button" ng-hide="hideButtons" ng-disabled="disableLeft()" class="btn nav-button left-nav-button" tooltip-placement="{{tooltipLeftDirection()}}" tooltip-html-unsafe="{{tooltipLeftContent()}}">',
-            '<span class="glyphicon glyphicon-chevron-left"></span>',
+            '<span class="{{scrollLeftIconClass()}}"></span>',
           '</button>',
           '<div class="spacer" ng-class="{\'hidden-buttons\': hideButtons}" ng-transclude></div>',
           '<button type="button" ng-hide="hideButtons" ng-disabled="disableRight()" class="btn nav-button right-nav-button" tooltip-placement="{{tooltipRightDirection()}}" tooltip-html-unsafe="{{tooltipRightContent()}}">',
-            '<span class="glyphicon glyphicon-chevron-right"></span>',
+            '<span class="{{scrollRightIconClass()}}"></span>',
           '</button>',
         '</div>'
         ].join(''),
@@ -96,6 +98,14 @@ angular.module('ui.tab.scroll', [])
 
         $scope.tooltipRightDirection = function() {
           return $scope.tooltipRight ? $scope.tooltipRight : 'bottom';
+        };
+
+        $scope.scrollLeftIconClass = function() {
+          return $scope.scrollLeftIcon ? $scope.scrollLeftIcon : 'glyphicon glyphicon-chevron-left';
+        };
+
+        $scope.scrollRightIconClass = function() {
+          return $scope.scrollRightIcon ? $scope.scrollRightIcon : 'glyphicon glyphicon-chevron-right';
         };
 
         //select the innermost child that isn't a span
