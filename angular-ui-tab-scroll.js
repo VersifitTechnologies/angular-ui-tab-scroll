@@ -59,11 +59,11 @@ angular.module('ui.tab.scroll', [])
 
       template: [
         '<div class="ui-tabs-scrollable">',
-          '<button ng-hide="hideButtons" ng-disabled="disableLeft()" class="btn nav-button left-nav-button" tooltip-placement="{{tooltipLeftDirection()}}" tooltip-html-unsafe="{{tooltipLeftContent()}}">',
+          '<button type="button" ng-hide="hideButtons" ng-disabled="disableLeft()" class="btn nav-button left-nav-button" tooltip-placement="{{tooltipLeftDirection()}}" tooltip-html-unsafe="{{tooltipLeftContent()}}">',
             '<span class="glyphicon glyphicon-chevron-left"></span>',
           '</button>',
           '<div class="spacer" ng-class="{\'hidden-buttons\': hideButtons}" ng-transclude></div>',
-          '<button ng-hide="hideButtons" ng-disabled="disableRight()" class="btn nav-button right-nav-button" tooltip-placement="{{tooltipRightDirection()}}" tooltip-html-unsafe="{{tooltipRightContent()}}">',
+          '<button type="button" ng-hide="hideButtons" ng-disabled="disableRight()" class="btn nav-button right-nav-button" tooltip-placement="{{tooltipRightDirection()}}" tooltip-html-unsafe="{{tooltipRightContent()}}">',
             '<span class="glyphicon glyphicon-chevron-right"></span>',
           '</button>',
         '</div>'
