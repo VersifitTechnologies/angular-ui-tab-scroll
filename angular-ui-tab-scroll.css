@@ -20,6 +20,7 @@
 }
 
 .ui-tabs-scrollable .nav > li {
+  margin-right: -4px;
   float: none;
   display: inline-block;
   height: 42px!important;
