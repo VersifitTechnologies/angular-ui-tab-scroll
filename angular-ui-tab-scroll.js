@@ -200,10 +200,16 @@ angular.module('ui.tab.scroll', [])
         //hello my friend jake weary
         $(window).on('resize', initAndApply);
 
-        //even if one doesn't exist, we can still initialize w/ this
-        $scope.$watch(function(){return $scope.watchExpression;}, function() {
-          $timeout(initAndApply, 0);
-        }, true);
+        //we initialize by watching changes on the inner tabset's tabs collection
+        var tabsetElem = angular.element($el[0].querySelector( 'div.spacer' )).children()[0];//get the wrapped 'tabset'
+        var $tabsetElem = angular.element(tabsetElem);
+        var tabsetScope = $tabsetElem.isolateScope() || $tabsetElem.scope();// get the tabset's scope to access to tabs collection
+
+        $scope.$watchCollection(function(){
+            return tabsetScope.tabs;
+          }, function(newValues, oldValues){
+            $timeout(initAndApply, 0);
+        });
 
       }
     };
