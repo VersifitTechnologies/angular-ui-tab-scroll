@@ -51,7 +51,6 @@ angular.module('ui.tab.scroll', [])
 
       scope: {
         showTooltips: '=',
-        watchExpression: '=',
         tooltipLeft: '=',
         tooltipRight: '=',
         tooltipTextSelector: '=',
