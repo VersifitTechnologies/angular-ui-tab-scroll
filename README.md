@@ -27,7 +27,8 @@ Usage
 Options
 =======
 * `show-tooltips` - whether or not to show the side-tooltips
-* `watch-expression` - an expression to watch for changes, to update the tab left/right buttons
-* `tooltipLeft` - which tooltip direction to use for the left tooltip (bottom, top, left, right) - defaults to bottom
-* `tooltipRight` - which tooltip direction to use for the right tooltip (bottom, top, left, right) - defaults to bottom
-* `tooltipTextSelector` - the selector for your tooltips, defaults to `*:not(:has("*:not(span)"))`
+* `tooltip-left` - which tooltip direction to use for the left tooltip (bottom, top, left, right) - defaults to bottom
+* `tooltip-right` - which tooltip direction to use for the right tooltip (bottom, top, left, right) - defaults to bottom
+* `tooltip-text-selector` - the selector for your tooltips, defaults to `*:not(:has("*:not(span)"))`
+* `scroll-left-icon` - the CSS class(es) to customize the left navigation button icon, defaults to `glyphicon glyphicon-chevron-left`
+* `scroll-right-icon` - the CSS class(es) to customize the right navigation button icon, defaults to `glyphicon glyphicon-chevron-right`
