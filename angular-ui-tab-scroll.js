@@ -1,7 +1,59 @@
 angular.module('ui.tab.scroll', [])
+.provider('scrollableTabsetConfig', function(){
+
+    //the default options
+    var defaultConfig = {
+      showTooltips: true,
+
+      tooltipLeft: 'bottom',
+      tooltipRight: 'bottom',
+
+      //select the innermost child that isn't a span
+      //this way we cover getting <tab-heading> and <tab heading=''>
+      //but leave other markup out of it, unless it's a span (commonly an icon)
+      tooltipTextSelector: '*:not(:has("*:not(span)"))',
+
+      scrollLeftIcon: 'glyphicon glyphicon-chevron-left',
+      scrollRightIcon: 'glyphicon glyphicon-chevron-right'
+    };
+
+    var config = angular.extend({}, defaultConfig);
+
+    return {
+      setShowTooltips : function(value){
+        config.showTooltips = value;
+      },
+      setTooltipLeft : function(value){
+        config.tooltipLeft = value;
+      },
+      setTooltipRight : function(value){
+        config.tooltipRight = value;
+      },
+      setTooltipTextSelector : function(value){
+        config.tooltipTextSelector = value;
+      },
+      setScrollLeftIcon : function(value){
+        config.scrollLeftIcon = value;
+      },
+      setScrollRightIcon : function(value){
+        config.scrollRightIcon = value;
+      },
+      $get: function(){
+        return {
+                  showTooltips: config.showTooltips,
+                  tooltipLeft: config.tooltipLeft,
+                  tooltipRight: config.tooltipRight,
+                  tooltipTextSelector: config.tooltipTextSelector,
+                  scrollLeftIcon: config.scrollLeftIcon,
+                  scrollRightIcon: config.scrollRightIcon
+                };
+      }
+    };
+  }
+)
 .directive('scrollableTabset', [
-  '$window', '$interval', '$timeout',
-  function($window, $interval, $timeout) {
+  'scrollableTabsetConfig', '$window', '$interval', '$timeout',
+  function(scrollableTabsetConfig, $window, $interval, $timeout) {
 
     var timeoutId = null;
 
@@ -75,6 +127,8 @@ angular.module('ui.tab.scroll', [])
         $scope.toTheLeftHTML = '';
         $scope.toTheRightHTML = '';
 
+        var showTooltips = angular.isDefined($scope.showTooltips)? $scope.showTooltips : scrollableTabsetConfig.showTooltips;
+
         $scope.disableLeft = function() {
           return !$scope.toTheLeftHTML;
         };
@@ -84,36 +138,32 @@ angular.module('ui.tab.scroll', [])
         };
 
         $scope.tooltipLeftContent = function() {
-          return $scope.showTooltips ? $scope.toTheLeftHTML : '';
+          return showTooltips ? $scope.toTheLeftHTML : '';
         };
 
         $scope.tooltipRightContent = function() {
-          return $scope.showTooltips ? $scope.toTheRightHTML : '';
+          return showTooltips ? $scope.toTheRightHTML : '';
         };
 
         $scope.tooltipLeftDirection = function() {
-          return $scope.tooltipLeft ? $scope.tooltipLeft : 'bottom';
+          return $scope.tooltipLeft ? $scope.tooltipLeft : scrollableTabsetConfig.tooltipLeft;
         };
 
         $scope.tooltipRightDirection = function() {
-          return $scope.tooltipRight ? $scope.tooltipRight : 'bottom';
+          return $scope.tooltipRight ? $scope.tooltipRight : scrollableTabsetConfig.tooltipRight;
         };
 
         $scope.scrollLeftIconClass = function() {
-          return $scope.scrollLeftIcon ? $scope.scrollLeftIcon : 'glyphicon glyphicon-chevron-left';
+          return $scope.scrollLeftIcon ? $scope.scrollLeftIcon : scrollableTabsetConfig.scrollLeftIcon;
         };
 
         $scope.scrollRightIconClass = function() {
-          return $scope.scrollRightIcon ? $scope.scrollRightIcon : 'glyphicon glyphicon-chevron-right';
+          return $scope.scrollRightIcon ? $scope.scrollRightIcon : scrollableTabsetConfig.scrollRightIcon;
         };
 
-        //select the innermost child that isn't a span
-        //this way we cover getting <tab-heading> and <tab heading=''>
-        //but leave other markup out of it, unless it's a span (commonly an icon)
-        var selector = '*:not(:has("*:not(span)"))';
 
         $scope.getSelector = function() {
-          return $scope.tooltipTextSelector ? $scope.tooltipTextSelector : selector;
+          return $scope.tooltipTextSelector ? $scope.tooltipTextSelector : scrollableTabsetConfig.tooltipTextSelector;
         };
 
         $scope.toTheLeft = function() {
