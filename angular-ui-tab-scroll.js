@@ -246,7 +246,11 @@ angular.module('ui.tab.scroll', [])
           $scope.$apply();
         };
 
-        //hello my friend jake weary
+        $.fn.doRecalculate = function() {
+          init();
+          $scope.$apply();
+        };
+        
         $(window).on('resize', initAndApply);
 
         //we initialize by watching changes on the inner tabset's tabs collection
