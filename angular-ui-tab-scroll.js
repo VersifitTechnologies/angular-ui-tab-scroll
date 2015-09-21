@@ -52,8 +52,8 @@ angular.module('ui.tab.scroll', [])
   }
 )
 .directive('scrollableTabset', [
-  'scrollableTabsetConfig', '$window', '$interval', '$timeout',
-  function(scrollableTabsetConfig, $window, $interval, $timeout) {
+  'scrollableTabsetConfig', '$window', '$interval', '$timeout','$sce',
+  function(scrollableTabsetConfig, $window, $interval, $timeout, $sce) {
 
     var timeoutId = null;
 
@@ -112,11 +112,11 @@ angular.module('ui.tab.scroll', [])
 
       template: [
         '<div class="ui-tabs-scrollable">',
-          '<button type="button" ng-hide="hideButtons" ng-disabled="disableLeft()" class="btn nav-button left-nav-button" tooltip-placement="{{tooltipLeftDirection()}}" tooltip-html-unsafe="{{tooltipLeftContent()}}">',
+          '<button type="button" ng-hide="hideButtons" ng-disabled="disableLeft()" class="btn nav-button left-nav-button" tooltip-placement="{{tooltipLeftDirection()}}" tooltip-html="tooltipLeftHtml">',
             '<span class="{{scrollLeftIconClass()}}"></span>',
           '</button>',
           '<div class="spacer" ng-class="{\'hidden-buttons\': hideButtons}" ng-transclude></div>',
-          '<button type="button" ng-hide="hideButtons" ng-disabled="disableRight()" class="btn nav-button right-nav-button" tooltip-placement="{{tooltipRightDirection()}}" tooltip-html-unsafe="{{tooltipRightContent()}}">',
+          '<button type="button" ng-hide="hideButtons" ng-disabled="disableRight()" class="btn nav-button right-nav-button" tooltip-placement="{{tooltipRightDirection()}}" tooltip-html="tooltipRightHtml">',
             '<span class="{{scrollRightIconClass()}}"></span>',
           '</button>',
         '</div>'
@@ -124,25 +124,19 @@ angular.module('ui.tab.scroll', [])
 
       link: function($scope, $el) {
 
-        $scope.toTheLeftHTML = '';
-        $scope.toTheRightHTML = '';
+        $scope.tooltipRightHtml = '';
+        $scope.tooltipLeftHtml = '';
+        var toTheLeftHTML = '';
+        var toTheRightHTML = '';
 
         var showTooltips = angular.isDefined($scope.showTooltips)? $scope.showTooltips : scrollableTabsetConfig.showTooltips;
 
         $scope.disableLeft = function() {
-          return !$scope.toTheLeftHTML;
+          return !toTheLeftHTML;
         };
 
         $scope.disableRight = function() {
-          return !$scope.toTheRightHTML;
-        };
-
-        $scope.tooltipLeftContent = function() {
-          return showTooltips ? $scope.toTheLeftHTML : '';
-        };
-
-        $scope.tooltipRightContent = function() {
-          return showTooltips ? $scope.toTheRightHTML : '';
+          return !toTheRightHTML;
         };
 
         $scope.tooltipLeftDirection = function() {
@@ -184,7 +178,8 @@ angular.module('ui.tab.scroll', [])
 
           });
 
-          $scope.toTheLeftHTML = nodes.join('<br>');
+          toTheLeftHTML = nodes.join('<br>');
+          $scope.tooltipLeftHtml = showTooltips ? $sce.trustAsHtml(toTheLeftHTML) : '';
         };
 
         $scope.toTheRight = function() {
@@ -206,7 +201,8 @@ angular.module('ui.tab.scroll', [])
 
           });
 
-          $scope.toTheRightHTML = nodes.join('<br>');
+          toTheRightHTML = nodes.join('<br>');
+          $scope.tooltipRightHtml = showTooltips ? $sce.trustAsHtml(toTheRightHTML) : '';
         };
 
         $scope.recalcSides = function() {
