@@ -1,0 +1,23 @@
+{
+  "name": "angular-ui-tab-scroll",
+  "version": "0.1.5",
+  "homepage": "https://github.com/VersifitTechnologies/angular-ui-tab-scroll",
+  "description": "A scrollable tab plugin compatible with angular-ui bootstrap tabs",
+  "repository" : { 
+    "type" : "git",
+    "url" : "https://github.com/VersifitTechnologies/angular-ui-tab-scroll"
+  },
+  "keywords": [
+    "ui",
+    "bootstrap",
+    "angular",
+    "tabs",
+    "scroll"
+  ],
+  "dependencies": {
+    "jquery": ">=2.1.4",
+    "bootstrap": ">=3.3.4",
+    "angular": ">=1.3.0",
+    "angular-ui-bootstrap": ">=0.13.0"
+  }
+}
