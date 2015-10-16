@@ -1,7 +1,7 @@
 {
   "name": "angular-ui-tab-scroll",
   "main": ["angular-ui-tab-scroll.js","angular-ui-tab-scroll.css"],
-  "version": "0.1.6",
+  "version": "0.1.7",
   "homepage": "https://github.com/tsmes/angular-ui-tab-scroll",
   "authors": [
     "Kyle Kemp <kempk@versifit.com>",
