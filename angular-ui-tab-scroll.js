@@ -241,7 +241,7 @@ angular.module('ui.tab.scroll', [])
 
           var tabContainerWidth = $scope.tabContainerWidth = tabs.scrollWidth;
           var tabWidth = $scope.tabWidth = tabs.getBoundingClientRect().width;
-          var realTabs = $tabs[0];
+          var realTabs = tabs;
 
           $scope.hideButtons = tabContainerWidth === tabWidth;
 
