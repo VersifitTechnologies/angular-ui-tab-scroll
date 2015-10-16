@@ -11,7 +11,7 @@ angular.module('ui.tab.scroll', [])
       //select the innermost child that isn't a span
       //this way we cover getting <tab-heading> and <tab heading=''>
       //but leave other markup out of it, unless it's a span (commonly an icon)
-      tooltipTextSelector: '*:not(:has("*:not(span)"))',
+      tooltipTextSelector: 'tab-heading',
 
       scrollLeftIcon: 'fa fa-chevron-left',
       scrollRightIcon: 'fa fa-chevron-right'
@@ -67,8 +67,8 @@ angular.module('ui.tab.scroll', [])
     var bindHoldFunctionTo = function(element, fn) {
 
       //get rid of the previous scroll function
-      element.unbind('mousedown');
-      element.unbind('mouseup');
+      element.off('mousedown', mouseDown);
+      element.off('mouseup', mouseUp);
 
       var isHolding = false;
 
@@ -81,7 +81,7 @@ angular.module('ui.tab.scroll', [])
           if(isHolding) {
             fn();
 
-            if(element.is(':disabled')) {
+            if(element[0].disabled) {
               cancelId();
             }
           }
@@ -160,20 +160,34 @@ angular.module('ui.tab.scroll', [])
           return $scope.tooltipTextSelector ? $scope.tooltipTextSelector : scrollableTabsetConfig.tooltipTextSelector;
         };
 
+        $scope.parentsUntilTag = function (element, tag) {
+          var nodeContainer = element.parent();
+            while (nodeContainer[0].tagName.toLowerCase() !== tag) {
+              nodeContainer = nodeContainer.parent();
+            }
+          return nodeContainer;
+        };
+
+        $scope.offsetLeft = function (element) {
+          return element[0].getBoundingClientRect().left + window.pageXOffset - document.documentElement.clientLeft;
+        }
+
+
         $scope.toTheLeft = function() {
           if(!$scope.tabContainer) return;
 
           var nodes = [];
-          $scope.tabContainer.find($scope.getSelector()).each(function(index, node) {
+          angular.forEach($scope.tabContainer.querySelectorAll($scope.getSelector()), function(node) {
 
-            var nodeObj = $(node);
-            var nodeContainer = nodeObj.parentsUntil('ul');
+            var nodeObj = angular.element(node);
+            var listItem = $scope.parentsUntilTag(nodeObj, 'li');
+            var leftPosition = listItem[0].getBoundingClientRect().left - $scope.tabContainer.getBoundingClientRect().left;
 
-            if(nodeContainer.offset().left > $scope.baseLeft) return;
+            if (leftPosition >= 0 ) return;
 
             var html = nodeObj.html().trim();
             if(html) {
-              nodes.push(html);
+              nodes.push(html.replace(' ', '&nbsp;'));
             }
 
           });
@@ -186,17 +200,18 @@ angular.module('ui.tab.scroll', [])
           if(!$scope.tabContainer) return;
 
           var nodes = [];
-          $scope.tabContainer.find($scope.getSelector()).each(function(index, node) {
+          angular.forEach($scope.tabContainer.querySelectorAll($scope.getSelector()), function(node) {
 
-            var nodeObj = $(node);
-            var nodeContainer = nodeObj.parentsUntil('ul');
-            var nodeWidth = nodeContainer.offset().left;
+            var nodeObj = angular.element(node);
+            var listItem = $scope.parentsUntilTag(nodeObj, 'li');
+            var leftPosition = parseInt(listItem[0].getBoundingClientRect().left + listItem[0].getBoundingClientRect().width - $scope.tabContainer.getBoundingClientRect().left);
+            var tabsWidth = $scope.tabContainer.getBoundingClientRect().width;
 
-            if(nodeWidth < $scope.tabWidth + $scope.baseLeft) return;
+            if(leftPosition <= tabsWidth ) return;
 
             var html = nodeObj.html().trim();
             if(html) {
-              nodes.push(html);
+              nodes.push(html.replace(' ', '&nbsp;'));
             }
 
           });
@@ -218,21 +233,20 @@ angular.module('ui.tab.scroll', [])
         };
 
         var init = function() {
-          var $leftNav = $el.find('.left-nav-button');
-          var $rightNav = $el.find('.right-nav-button');
-          var $tabs = $scope.tabContainer = $el.find('.spacer').find('ul.nav.nav-tabs');
+          var leftNav = angular.element($el[0].querySelector('.left-nav-button'));
+          var rightNav = angular.element($el[0].querySelector('.right-nav-button'));
+          var tabs = $scope.tabContainer = $el[0].querySelector('.spacer').querySelector('ul.nav.nav-tabs');
 
-          $scope.baseLeft = $el.offset().left;
+          $scope.baseLeft = $scope.offsetLeft($el);
 
-          var tabContainerWidth = $scope.tabContainerWidth = $tabs[0].scrollWidth;
-          var tabWidth = $scope.tabWidth = $tabs.width();
-          var tabScrollWidth = tabWidth / 6;
+          var tabContainerWidth = $scope.tabContainerWidth = tabs.scrollWidth;
+          var tabWidth = $scope.tabWidth = tabs.getBoundingClientRect().width;
           var realTabs = $tabs[0];
 
           $scope.hideButtons = tabContainerWidth === tabWidth;
 
-          bindHoldFunctionTo($leftNav, generateScrollFunction(realTabs, -tabScrollWidth));
-          bindHoldFunctionTo($rightNav, generateScrollFunction(realTabs, tabScrollWidth));
+          bindHoldFunctionTo(leftNav, generateScrollFunction(realTabs, -100));
+          bindHoldFunctionTo(rightNav, generateScrollFunction(realTabs, 100));
 
           $scope.recalcSides();
         };
@@ -242,12 +256,8 @@ angular.module('ui.tab.scroll', [])
           $scope.$apply();
         };
 
-        $.fn.doRecalculate = function() {
-          init();
-          $scope.$apply();
-        };
-
-        $(window).on('resize', initAndApply);
+        var w = angular.element($window);
+        w.bind('resize', initAndApply);
 
         //we initialize by watching changes on the inner tabset's tabs collection
         var tabsetElem = angular.element($el[0].querySelector( 'div.spacer' )).children()[0];//get the wrapped 'tabset'
