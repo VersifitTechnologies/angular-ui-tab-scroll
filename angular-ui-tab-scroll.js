@@ -13,8 +13,8 @@ angular.module('ui.tab.scroll', [])
       //but leave other markup out of it, unless it's a span (commonly an icon)
       tooltipTextSelector: '*:not(:has("*:not(span)"))',
 
-      scrollLeftIcon: 'glyphicon glyphicon-chevron-left',
-      scrollRightIcon: 'glyphicon glyphicon-chevron-right'
+      scrollLeftIcon: 'fa fa-chevron-left',
+      scrollRightIcon: 'fa fa-chevron-right'
     };
 
     var config = angular.extend({}, defaultConfig);
@@ -246,7 +246,7 @@ angular.module('ui.tab.scroll', [])
           init();
           $scope.$apply();
         };
-        
+
         $(window).on('resize', initAndApply);
 
         //we initialize by watching changes on the inner tabset's tabs collection
