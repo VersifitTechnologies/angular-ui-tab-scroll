@@ -1,12 +1,13 @@
 angular-ui-tab-scroll
 =====================
 
+This is a fork of https://github.com/VersifitTechnologies/angular-ui-tab-scroll with the dependency on jQuery removed.
+
 A scrollable tab plugin compatible with angular-ui bootstrap tabs.
 
 # Dependencies
 
 * Bootstrap CSS
-* jQuery
 * AngularJS
 * angular-ui-bootstrap
 
@@ -34,17 +35,17 @@ A scrollable tab plugin compatible with angular-ui bootstrap tabs.
 * `scroll-right-icon` - the CSS class(es) to customize the right navigation button icon, defaults to `glyphicon glyphicon-chevron-right`
 
 
-These options can directly be set on each directive as **DOM attributes**. 
+These options can directly be set on each directive as **DOM attributes**.
 
 
 Example:
 
 ```
-<scrollable-tabset show-tooltips="true" 
+<scrollable-tabset show-tooltips="true"
 	tooltip-left="right"
 	tooltip-right="left"
-	scroll-left-icon="glyphicon glyphicon-chevron-left" 
-	scroll-right-icon="glyphicon glyphicon-chevron-right">
+	scroll-left-icon="fa fa-chevron-left"
+	scroll-right-icon="fa fa-chevron-right">
 	<tabset>
 		<tab ng-repeat="x in tabs">...</tab>
 	</tabset>
@@ -66,11 +67,8 @@ angular.module('yourApp', [])
 
 	}]);
 ```
-Here is a working plunker : http://plnkr.co/edit/BheQyO7W9qXS0F6vZTlg?p=preview
 
 This way, you can keep the directive usage simple in all your html templates!
 
 
 > **Important Note:** When an option is both defined at directive level and at config level,  the value specified in the DOM **takes precedence over the one from the config**!.
-
-
