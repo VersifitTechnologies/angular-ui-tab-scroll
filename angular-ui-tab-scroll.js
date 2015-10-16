@@ -102,6 +102,7 @@ angular.module('ui.tab.scroll', [])
       transclude: true,
 
       scope: {
+        tabs: '=',
         showTooltips: '=',
         tooltipLeft: '=',
         tooltipRight: '=',
@@ -265,7 +266,7 @@ angular.module('ui.tab.scroll', [])
         var tabsetScope = $tabsetElem.isolateScope() || $tabsetElem.scope();// get the tabset's scope to access to tabs collection
 
         $scope.$watchCollection(function(){
-            return tabsetScope.tabs;
+            return $scope.tabs;
           }, function(newValues, oldValues){
             $timeout(initAndApply, 0);
         });
