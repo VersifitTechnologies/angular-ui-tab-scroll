@@ -11,10 +11,7 @@ angular.module('ui.tab.scroll', [])
       //select the innermost child that isn't a span
       //this way we cover getting <tab-heading> and <tab heading=''>
       //but leave other markup out of it, unless it's a span (commonly an icon)
-      tooltipTextSelector: '*:not(:has("*:not(span)"))',
-
-      scrollLeftIcon: 'glyphicon glyphicon-chevron-left',
-      scrollRightIcon: 'glyphicon glyphicon-chevron-right'
+      tooltipTextSelector: '*:not(:has("*:not(span)"))'
     };
 
     var config = angular.extend({}, defaultConfig);
@@ -32,28 +29,20 @@ angular.module('ui.tab.scroll', [])
       setTooltipTextSelector : function(value){
         config.tooltipTextSelector = value;
       },
-      setScrollLeftIcon : function(value){
-        config.scrollLeftIcon = value;
-      },
-      setScrollRightIcon : function(value){
-        config.scrollRightIcon = value;
-      },
       $get: function(){
         return {
                   showTooltips: config.showTooltips,
                   tooltipLeft: config.tooltipLeft,
                   tooltipRight: config.tooltipRight,
-                  tooltipTextSelector: config.tooltipTextSelector,
-                  scrollLeftIcon: config.scrollLeftIcon,
-                  scrollRightIcon: config.scrollRightIcon
+                  tooltipTextSelector: config.tooltipTextSelector
                 };
       }
     };
   }
 )
 .directive('scrollableTabset', [
-  'scrollableTabsetConfig', '$window', '$interval', '$timeout',
-  function(scrollableTabsetConfig, $window, $interval, $timeout) {
+  'scrollableTabsetConfig', '$window', '$interval', '$timeout','$sce',
+  function(scrollableTabsetConfig, $window, $interval, $timeout, $sce) {
 
     var timeoutId = null;
 
@@ -105,44 +94,32 @@ angular.module('ui.tab.scroll', [])
         showTooltips: '=',
         tooltipLeft: '=',
         tooltipRight: '=',
-        tooltipTextSelector: '=',
-        scrollLeftIcon: '=',
-        scrollRightIcon: '='
+        tooltipTextSelector: '='
       },
 
       template: [
         '<div class="ui-tabs-scrollable">',
-          '<button type="button" ng-hide="hideButtons" ng-disabled="disableLeft()" class="btn nav-button left-nav-button" tooltip-placement="{{tooltipLeftDirection()}}" tooltip-html-unsafe="{{tooltipLeftContent()}}">',
-            '<span class="{{scrollLeftIconClass()}}"></span>',
-          '</button>',
+          '<button type="button" ng-hide="hideButtons" ng-disabled="disableLeft()" class="btn nav-button left-nav-button" tooltip-placement="{{tooltipLeftDirection()}}" tooltip-html="tooltipLeftHtml"/>',
           '<div class="spacer" ng-class="{\'hidden-buttons\': hideButtons}" ng-transclude></div>',
-          '<button type="button" ng-hide="hideButtons" ng-disabled="disableRight()" class="btn nav-button right-nav-button" tooltip-placement="{{tooltipRightDirection()}}" tooltip-html-unsafe="{{tooltipRightContent()}}">',
-            '<span class="{{scrollRightIconClass()}}"></span>',
-          '</button>',
+          '<button type="button" ng-hide="hideButtons" ng-disabled="disableRight()" class="btn nav-button right-nav-button" tooltip-placement="{{tooltipRightDirection()}}" tooltip-html="tooltipRightHtml"/>',
         '</div>'
         ].join(''),
 
       link: function($scope, $el) {
 
-        $scope.toTheLeftHTML = '';
-        $scope.toTheRightHTML = '';
+        $scope.tooltipRightHtml = '';
+        $scope.tooltipLeftHtml = '';
+        var toTheLeftHTML = '';
+        var toTheRightHTML = '';
 
         var showTooltips = angular.isDefined($scope.showTooltips)? $scope.showTooltips : scrollableTabsetConfig.showTooltips;
 
         $scope.disableLeft = function() {
-          return !$scope.toTheLeftHTML;
+          return !toTheLeftHTML;
         };
 
         $scope.disableRight = function() {
-          return !$scope.toTheRightHTML;
-        };
-
-        $scope.tooltipLeftContent = function() {
-          return showTooltips ? $scope.toTheLeftHTML : '';
-        };
-
-        $scope.tooltipRightContent = function() {
-          return showTooltips ? $scope.toTheRightHTML : '';
+          return !toTheRightHTML;
         };
 
         $scope.tooltipLeftDirection = function() {
@@ -152,15 +129,6 @@ angular.module('ui.tab.scroll', [])
         $scope.tooltipRightDirection = function() {
           return $scope.tooltipRight ? $scope.tooltipRight : scrollableTabsetConfig.tooltipRight;
         };
-
-        $scope.scrollLeftIconClass = function() {
-          return $scope.scrollLeftIcon ? $scope.scrollLeftIcon : scrollableTabsetConfig.scrollLeftIcon;
-        };
-
-        $scope.scrollRightIconClass = function() {
-          return $scope.scrollRightIcon ? $scope.scrollRightIcon : scrollableTabsetConfig.scrollRightIcon;
-        };
-
 
         $scope.getSelector = function() {
           return $scope.tooltipTextSelector ? $scope.tooltipTextSelector : scrollableTabsetConfig.tooltipTextSelector;
@@ -184,7 +152,8 @@ angular.module('ui.tab.scroll', [])
 
           });
 
-          $scope.toTheLeftHTML = nodes.join('<br>');
+          toTheLeftHTML = nodes.join('<br>');
+          $scope.tooltipLeftHtml = showTooltips ? $sce.trustAsHtml(toTheLeftHTML) : '';
         };
 
         $scope.toTheRight = function() {
@@ -206,7 +175,8 @@ angular.module('ui.tab.scroll', [])
 
           });
 
-          $scope.toTheRightHTML = nodes.join('<br>');
+          toTheRightHTML = nodes.join('<br>');
+          $scope.tooltipRightHtml = showTooltips ? $sce.trustAsHtml(toTheRightHTML) : '';
         };
 
         $scope.recalcSides = function() {
@@ -246,7 +216,11 @@ angular.module('ui.tab.scroll', [])
           $scope.$apply();
         };
 
-        //hello my friend jake weary
+        $.fn.doRecalculate = function() {
+          init();
+          $scope.$apply();
+        };
+        
         $(window).on('resize', initAndApply);
 
         //we initialize by watching changes on the inner tabset's tabs collection
