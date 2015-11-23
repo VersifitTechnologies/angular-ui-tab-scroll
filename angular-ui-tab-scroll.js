@@ -11,10 +11,7 @@ angular.module('ui.tab.scroll', [])
       //select the innermost child that isn't a span
       //this way we cover getting <tab-heading> and <tab heading=''>
       //but leave other markup out of it, unless it's a span (commonly an icon)
-      tooltipTextSelector: '*:not(:has("*:not(span)"))',
-
-      scrollLeftIcon: 'glyphicon glyphicon-chevron-left',
-      scrollRightIcon: 'glyphicon glyphicon-chevron-right'
+      tooltipTextSelector: '*:not(:has("*:not(span)"))'
     };
 
     var config = angular.extend({}, defaultConfig);
@@ -32,20 +29,12 @@ angular.module('ui.tab.scroll', [])
       setTooltipTextSelector : function(value){
         config.tooltipTextSelector = value;
       },
-      setScrollLeftIcon : function(value){
-        config.scrollLeftIcon = value;
-      },
-      setScrollRightIcon : function(value){
-        config.scrollRightIcon = value;
-      },
       $get: function(){
         return {
                   showTooltips: config.showTooltips,
                   tooltipLeft: config.tooltipLeft,
                   tooltipRight: config.tooltipRight,
-                  tooltipTextSelector: config.tooltipTextSelector,
-                  scrollLeftIcon: config.scrollLeftIcon,
-                  scrollRightIcon: config.scrollRightIcon
+                  tooltipTextSelector: config.tooltipTextSelector
                 };
       }
     };
@@ -105,13 +94,12 @@ angular.module('ui.tab.scroll', [])
         showTooltips: '=',
         tooltipLeft: '=',
         tooltipRight: '=',
-        tooltipTextSelector: '=',
-        scrollLeftIcon: '=',
-        scrollRightIcon: '='
+        tooltipTextSelector: '='
       },
 
       template: [
         '<div class="ui-tabs-scrollable">',
+<<<<<<< HEAD
           '<button type="button" ng-hide="hideButtons" ng-disabled="disableLeft()" class="btn nav-button left-nav-button" tooltip-placement="{{tooltipLeftDirection()}}" tooltip-html="tooltipLeftHtml">',
             '<span class="{{scrollLeftIconClass()}}"></span>',
           '</button>',
@@ -119,6 +107,11 @@ angular.module('ui.tab.scroll', [])
           '<button type="button" ng-hide="hideButtons" ng-disabled="disableRight()" class="btn nav-button right-nav-button" tooltip-placement="{{tooltipRightDirection()}}" tooltip-html="tooltipRightHtml">',
             '<span class="{{scrollRightIconClass()}}"></span>',
           '</button>',
+=======
+          '<button type="button" ng-hide="hideButtons" ng-disabled="disableLeft()" class="btn nav-button left-nav-button" tooltip-placement="{{tooltipLeftDirection()}}" tooltip-html="tooltipLeftHtml"/>',
+          '<div class="spacer" ng-class="{\'hidden-buttons\': hideButtons}" ng-transclude></div>',
+          '<button type="button" ng-hide="hideButtons" ng-disabled="disableRight()" class="btn nav-button right-nav-button" tooltip-placement="{{tooltipRightDirection()}}" tooltip-html="tooltipRightHtml"/>',
+>>>>>>> origin/pr/22
         '</div>'
         ].join(''),
 
@@ -146,15 +139,6 @@ angular.module('ui.tab.scroll', [])
         $scope.tooltipRightDirection = function() {
           return $scope.tooltipRight ? $scope.tooltipRight : scrollableTabsetConfig.tooltipRight;
         };
-
-        $scope.scrollLeftIconClass = function() {
-          return $scope.scrollLeftIcon ? $scope.scrollLeftIcon : scrollableTabsetConfig.scrollLeftIcon;
-        };
-
-        $scope.scrollRightIconClass = function() {
-          return $scope.scrollRightIcon ? $scope.scrollRightIcon : scrollableTabsetConfig.scrollRightIcon;
-        };
-
 
         $scope.getSelector = function() {
           return $scope.tooltipTextSelector ? $scope.tooltipTextSelector : scrollableTabsetConfig.tooltipTextSelector;
