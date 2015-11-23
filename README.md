@@ -6,7 +6,6 @@ A scrollable tab plugin compatible with angular-ui bootstrap tabs.
 # Dependencies
 
 * Bootstrap CSS
-* jQuery
 * AngularJS
 * angular-ui-bootstrap
 
