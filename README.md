@@ -3,6 +3,8 @@ angular-ui-tab-scroll
 
 A scrollable tab plugin compatible with angular-ui bootstrap tabs.
 
+Here is a working demo : http://plnkr.co/edit/j3S0bPOuhjG08vn9fK4c?p=preview
+
 # Dependencies
 
 * Bootstrap CSS
@@ -57,7 +59,6 @@ angular.module('yourApp', [])
 		//...set other properties here
 	}]);
 ```
-Here is a working plunker : http://plnkr.co/edit/j3S0bPOuhjG08vn9fK4c?p=preview
 
 This way, you can keep the directive usage simple in all your html templates!
 
