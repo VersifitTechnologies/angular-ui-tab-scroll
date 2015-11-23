@@ -28,7 +28,7 @@ A scrollable tab plugin compatible with angular-ui bootstrap tabs.
 * `show-tooltips` - whether or not to show the side-tooltips
 * `tooltip-left` - which tooltip direction to use for the left tooltip (bottom, top, left, right) - defaults to bottom
 * `tooltip-right` - which tooltip direction to use for the right tooltip (bottom, top, left, right) - defaults to bottom
-* `tooltip-text-selector` - the selector for your tooltips, defaults to `*:not(:has("*:not(span)"))`
+* `tooltip-text-selector` - the selector for your tooltips, defaults to `tab-heading`
 
 
 These options can directly be set on each directive as **DOM attributes**. 
