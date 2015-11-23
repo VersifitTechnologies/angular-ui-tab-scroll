@@ -29,8 +29,6 @@ A scrollable tab plugin compatible with angular-ui bootstrap tabs.
 * `tooltip-left` - which tooltip direction to use for the left tooltip (bottom, top, left, right) - defaults to bottom
 * `tooltip-right` - which tooltip direction to use for the right tooltip (bottom, top, left, right) - defaults to bottom
 * `tooltip-text-selector` - the selector for your tooltips, defaults to `*:not(:has("*:not(span)"))`
-* `scroll-left-icon` - the CSS class(es) to customize the left navigation button icon, defaults to `glyphicon glyphicon-chevron-left`
-* `scroll-right-icon` - the CSS class(es) to customize the right navigation button icon, defaults to `glyphicon glyphicon-chevron-right`
 
 
 These options can directly be set on each directive as **DOM attributes**. 
@@ -41,9 +39,7 @@ Example:
 ```
 <scrollable-tabset show-tooltips="true" 
 	tooltip-left="right"
-	tooltip-right="left"
-	scroll-left-icon="glyphicon glyphicon-chevron-left" 
-	scroll-right-icon="glyphicon glyphicon-chevron-right">
+	tooltip-right="left">
 	<tabset>
 		<tab ng-repeat="x in tabs">...</tab>
 	</tabset>
@@ -57,15 +53,11 @@ Example:
 ```
 angular.module('yourApp', [])
 	.config(['scrollableTabsetConfigProvider', function(scrollableTabsetConfigProvider){
-
 		scrollableTabsetConfigProvider.setShowTooltips(false);
-		scrollableTabsetConfigProvider.setScrollLeftIcon('glyphicon glyphicon-chevron-left');
-		scrollableTabsetConfigProvider.setScrollRightIcon('glyphicon glyphicon-chevron-right');
 		//...set other properties here
-
 	}]);
 ```
-Here is a working plunker : http://plnkr.co/edit/BheQyO7W9qXS0F6vZTlg?p=preview
+Here is a working plunker : http://plnkr.co/edit/j3S0bPOuhjG08vn9fK4c?p=preview
 
 This way, you can keep the directive usage simple in all your html templates!
 
