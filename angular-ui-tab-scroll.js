@@ -1,3 +1,10 @@
+/*
+ * angular-ui-tab-scroll
+ * https://github.com/VersifitTechnologies/angular-ui-tab-scroll
+
+ * Version: 1.0.0
+ * License: MIT
+ */
 angular.module('ui.tab.scroll', [])
     .provider('scrollableTabsetConfig', function(){
 
