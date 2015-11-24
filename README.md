@@ -65,7 +65,11 @@ This way, you can keep the directive usage simple in all your html templates!
 
 > **Important Note:** When an option is both defined at directive level and at config level,  the value specified in the DOM **takes precedence over the one from the config**!.
 
-# Icons
+# API
+
+there is an exposed api, with it you can initiate a re-calculation of the scroll.
+
+# Styling
 
 to change the icons on the scroll buttons you simply need to override the relevant button's css with your own css
 
