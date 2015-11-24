@@ -1,15 +1,15 @@
 angular-ui-tab-scroll
 =====================
 
-A scrollable tab plugin compatible with angular-ui bootstrap tabs.
+A scrollable tab plugin intended for scrolling UI Bootstrap [tabset](https://angular-ui.github.io/bootstrap/#/tabs).
 
 Here is a working demo : http://plnkr.co/edit/YJNDaQ?p=preview
 
 # Dependencies
 
-* Bootstrap CSS
 * AngularJS
-* angular-ui-bootstrap
+* UI Bootstrap
+* Bootstrap CSS
 
 # Usage
 
