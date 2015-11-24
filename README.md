@@ -65,4 +65,17 @@ This way, you can keep the directive usage simple in all your html templates!
 
 > **Important Note:** When an option is both defined at directive level and at config level,  the value specified in the DOM **takes precedence over the one from the config**!.
 
+# Icons
+
+to change the icons on the scroll buttons you simply need to override the relevant button's css with your own css
+
+Example:
+```
+.right-nav-button:before{
+  font-family: 'Glyphicons Halflings';;
+  content: '\e080';
+}
+```
+
+
 
