@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="TabScrollDemo" ng-controller="MainCtrl">
+<html ng-app="TabScrollDemo" ng-controller="MainCtrl as main">
 
   <head>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular.js"></script>
@@ -9,7 +9,7 @@
     
     <!-- links to files for angular-ui-tab-scroll  -->
     <link rel="stylesheet" href="https://rawgit.com/VersifitTechnologies/angular-ui-tab-scroll/master/angular-ui-tab-scroll.css" />
-    <script src="https://rawgit.com/VersifitTechnologies/angular-ui-tab-scroll/master/angular-ui-tab-scroll.js"></script>
+    <script src="angular-ui-tab-scroll.js"></script>
 
   </head>
 
@@ -17,15 +17,21 @@
     <div style="padding:30px">
     <h1>Demo for angular-ui-tab-scroll</h1>
     <a href="https://github.com/VersifitTechnologies/angular-ui-tab-scroll">https://github.com/VersifitTechnologies/angular-ui-tab-scroll</a>
-    <br/><br/><br/><br/><br/>
-    <scrollable-tabset >
+
+    <br/><br/><br/><br/>
+    <scrollable-tabset api="main.scrlTabsApi">
       <tabset>
-        <tab ng-repeat="tab in tabs">
+        <tab ng-repeat="tab in main.tabs">
           <tab-heading>{{tab.heading}}</tab-heading>
-          {{tab.content}}
+          <div style="background-color: #FBFBFB; padding: 50px">{{tab.content}}</div>
         </tab>
       </tabset>
     </scrollable-tabset>
+
+    <br/><br/><br/><br/><br/><br/>
+    <button type="button" class="btn btn-default" ng-click="main.addTab()">add tab</button>
+    <button type="button" class="btn btn-default" ng-click="main.removeTab()">remove tab</button>
+    <button type="button" class="btn btn-default" ng-click="main.reCalcScroll()">re-calculate scroll</button>
   </div>
   </body>
 
