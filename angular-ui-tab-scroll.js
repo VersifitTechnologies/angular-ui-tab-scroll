@@ -5,49 +5,49 @@
  * Version: 1.0.0
  * License: MIT
  */
- 
+
 angular.module('ui.tab.scroll', [])
     .provider('scrollableTabsetConfig', function(){
 
-      //the default options
-      var defaultConfig = {
-        showTooltips: true,
+          //the default options
+          var defaultConfig = {
+            showTooltips: true,
 
-        tooltipLeft: 'bottom',
-        tooltipRight: 'bottom',
+            tooltipLeft: 'bottom',
+            tooltipRight: 'bottom',
 
-        //select the innermost child that isn't a span
-        //this way we cover getting <tab-heading> and <tab heading=''>
-        //but leave other markup out of it, unless it's a span (commonly an icon)
-        tooltipTextSelector: 'tab-heading'
-      };
+            //select the innermost child that isn't a span
+            //this way we cover getting <tab-heading> and <tab heading=''>
+            //but leave other markup out of it, unless it's a span (commonly an icon)
+            tooltipTextSelector: 'tab-heading'
+          };
 
-      var config = angular.extend({}, defaultConfig);
+          var config = angular.extend({}, defaultConfig);
 
-      return {
-        setShowTooltips : function(value){
-          config.showTooltips = value;
-        },
-        setTooltipLeft : function(value){
-          config.tooltipLeft = value;
-        },
-        setTooltipRight : function(value){
-          config.tooltipRight = value;
-        },
-        setTooltipTextSelector : function(value){
-          config.tooltipTextSelector = value;
-        },
-        $get: function(){
           return {
-            showTooltips: config.showTooltips,
-            tooltipLeft: config.tooltipLeft,
-            tooltipRight: config.tooltipRight,
-            tooltipTextSelector: config.tooltipTextSelector
+            setShowTooltips : function(value){
+              config.showTooltips = value;
+            },
+            setTooltipLeft : function(value){
+              config.tooltipLeft = value;
+            },
+            setTooltipRight : function(value){
+              config.tooltipRight = value;
+            },
+            setTooltipTextSelector : function(value){
+              config.tooltipTextSelector = value;
+            },
+            $get: function(){
+              return {
+                showTooltips: config.showTooltips,
+                tooltipLeft: config.tooltipLeft,
+                tooltipRight: config.tooltipRight,
+                tooltipTextSelector: config.tooltipTextSelector
+              };
+            }
           };
         }
-      };
-    }
-)
+    )
     .directive('scrollableTabset', [
       'scrollableTabsetConfig', '$window', '$interval', '$timeout','$sce',
       function(scrollableTabsetConfig, $window, $interval, $timeout, $sce) {
@@ -102,33 +102,25 @@ angular.module('ui.tab.scroll', [])
             showTooltips: '=',
             tooltipLeft: '=',
             tooltipRight: '=',
-            tooltipTextSelector: '='
+            tooltipTextSelector: '=',
+            api: '='
           },
 
-          bindToController: {
-            scrollableTabsetApi: '='
-          },
-
-          controller: ['$scope', '$timeout',function($scope, $timeout){
-            var vm = this;
-
-            vm.scrollableTabsetApi = {
+          controller: ['$scope', '$timeout', function($scope, $timeout) {
+            $scope.api = {
               doRecalculate: function(){
                 $timeout(function(){$scope.init()});
               }
             };
-
           }],
-
-          controllerAs: 'vm',
 
           template: [
             '<div class="ui-tabs-scrollable">',
-              '<button type="button" ng-hide="hideButtons" ng-disabled="disableLeft()" class="btn nav-button left-nav-button" tooltip-placement="{{tooltipLeftDirection()}}" tooltip-html="tooltipLeftHtml">',
-              '</button>',
-              '<div class="spacer" ng-class="{\'hidden-buttons\': hideButtons}" ng-transclude></div>',
-              '<button type="button" ng-hide="hideButtons" ng-disabled="disableRight()" class="btn nav-button right-nav-button" tooltip-placement="{{tooltipRightDirection()}}" tooltip-html="tooltipRightHtml">',
-              '</button>',
+            '<button type="button" ng-hide="hideButtons" ng-disabled="disableLeft()" class="btn nav-button left-nav-button" tooltip-placement="{{tooltipLeftDirection()}}" tooltip-html="tooltipLeftHtml">',
+            '</button>',
+            '<div class="spacer" ng-class="{\'hidden-buttons\': hideButtons}" ng-transclude></div>',
+            '<button type="button" ng-hide="hideButtons" ng-disabled="disableRight()" class="btn nav-button right-nav-button" tooltip-placement="{{tooltipRightDirection()}}" tooltip-html="tooltipRightHtml">',
+            '</button>',
             '</div>'
           ].join(''),
 
