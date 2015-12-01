@@ -2,7 +2,7 @@
  * angular-ui-tab-scroll
  * https://github.com/VersifitTechnologies/angular-ui-tab-scroll
  *
- * Version: 1.1.0
+ * Version: 1.1.1
  * License: MIT
  */
 
@@ -147,29 +147,22 @@ angular.module('ui.tab.scroll', [])
               return $scope.tooltipTextSelector ? $scope.tooltipTextSelector : scrollableTabsetConfig.tooltipTextSelector;
             };
 
-            $scope.parentsUntilTag = function (element, tag) {
-              var nodeContainer = element.parent();
-              while (nodeContainer[0].tagName.toLowerCase() !== tag) {
-                nodeContainer = nodeContainer.parent();
-              }
-              return nodeContainer;
-            };
-
             $scope.toTheLeft = function() {
               if(!$scope.tabContainer || $scope.hideButtons)return;
 
               var nodes = [];
-              angular.forEach($scope.tabContainer.querySelectorAll($scope.getSelector()), function(node) {
+              var allTabs = $scope.tabContainer.querySelectorAll('li');
+              angular.forEach(allTabs, function(node) {
 
-                var nodeObj = angular.element(node);
-                var listItem = $scope.parentsUntilTag(nodeObj, 'li');
-                var leftPosition = listItem[0].getBoundingClientRect().left - $scope.tabContainer.getBoundingClientRect().left;
+                var leftPosition = node.getBoundingClientRect().left - $scope.tabContainer.getBoundingClientRect().left;
 
                 if (leftPosition >= 0 ) return;
 
+                var nodeObj = angular.element(node.querySelector($scope.getSelector()));
+
                 var html = nodeObj.html().trim();
                 if(html) {
-                  nodes.push(html.replace(' ', '&nbsp;'));
+                  nodes.push(html.split(' ').join('&nbsp;'));
                 }
 
               });
@@ -183,18 +176,19 @@ angular.module('ui.tab.scroll', [])
               if(!$scope.tabContainer || $scope.hideButtons)return;
 
               var nodes = [];
-              angular.forEach($scope.tabContainer.querySelectorAll($scope.getSelector()), function(node) {
 
-                var nodeObj = angular.element(node);
-                var listItem = $scope.parentsUntilTag(nodeObj, 'li');
-                var leftPosition = parseInt(listItem[0].getBoundingClientRect().left + listItem[0].getBoundingClientRect().width - $scope.tabContainer.getBoundingClientRect().left);
+              var allTabs = $scope.tabContainer.querySelectorAll('li');
+              angular.forEach(allTabs, function(node) {
+
+                var leftPosition = parseInt(node.getBoundingClientRect().left + node.getBoundingClientRect().width - $scope.tabContainer.getBoundingClientRect().left);
                 var tabsWidth = $scope.tabContainer.getBoundingClientRect().width;
-
                 if(leftPosition <= tabsWidth ) return;
+
+                var nodeObj = angular.element(node.querySelector($scope.getSelector()));
 
                 var html = nodeObj.html().trim();
                 if(html) {
-                  nodes.push(html.replace(' ', '&nbsp;'));
+                  nodes.push(html.split(' ').join('&nbsp;'));
                 }
 
               });
@@ -262,3 +256,4 @@ angular.module('ui.tab.scroll', [])
           }
         };
       }]);
+
