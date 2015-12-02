@@ -2,9 +2,9 @@ var app = angular.module('TabScrollDemo', ['ui.bootstrap', 'ui.tab.scroll']);
 
 app.config(function(scrollableTabsetConfigProvider){
     scrollableTabsetConfigProvider.setShowTooltips (true);
-    scrollableTabsetConfigProvider.setTooltipLeft('right');
-    scrollableTabsetConfigProvider.setTooltipRight('left');
-})
+    scrollableTabsetConfigProvider.setTooltipLeftPlacement('bottom');
+    scrollableTabsetConfigProvider.setTooltipRightPlacement('bottom');
+});
 
 app.controller('MainCtrl', ['$scope', function($scope) {
   var vm = this;
@@ -26,7 +26,7 @@ app.controller('MainCtrl', ['$scope', function($scope) {
       vm.tabs.splice(vm.tabs.length - 1, 1);
   };
 
-  for(var i=0; i<5; i++) {
+  for(var i=0; i<15; i++) {
     vm.tabs.push({
       heading: 'Tab ' + i,
       content: 'This is the content for tab ' + i
