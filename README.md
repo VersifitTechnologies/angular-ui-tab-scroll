@@ -5,12 +5,6 @@ A scrollable tab plugin intended for scrolling UI Bootstrap [tabset](https://ang
 
 Here is a working demo : http://plnkr.co/edit/YJNDaQ?p=preview
 
-# Dependencies
-
-* AngularJS
-* UI Bootstrap
-* Bootstrap CSS
-
 # Usage
 
 * Include `angular-ui-tab-scroll.js` and `angular-ui-tab-scroll.css` in your page.
@@ -80,6 +74,12 @@ Example:
   content: '\e080';
 }
 ```
+
+# Dependencies
+
+* AngularJS
+* UI Bootstrap
+* Bootstrap CSS
 
 
 

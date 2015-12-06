@@ -9,7 +9,8 @@
     "bootstrap",
     "angular",
     "tabs",
-    "scroll"
+    "scroll",
+    "tabset"
   ],
   "license": "MIT",
   "ignore": [
