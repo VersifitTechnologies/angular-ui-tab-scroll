@@ -2,7 +2,7 @@
  * angular-ui-tab-scroll
  * https://github.com/VersifitTechnologies/angular-ui-tab-scroll
  *
- * Version: 1.1.2
+ * Version: 1.2.0
  * License: MIT
  */
 
@@ -12,9 +12,9 @@ angular.module('ui.tab.scroll', [])
           //the default options
           var defaultConfig = {
             showTooltips: true,
-
             tooltipLeftPlacement: 'right',
             tooltipRightPlacement: 'left',
+            scrollBy: '50',
 
             //select the innermost child that isn't a span
             //this way we cover getting <tab-heading> and <tab heading=''>
@@ -34,6 +34,9 @@ angular.module('ui.tab.scroll', [])
             setTooltipRightPlacement : function(value){
               config.tooltipRightPlacement = value;
             },
+            setScrollBy : function(value){
+              config.scrollBy = value;
+            },
             setTooltipTextSelector : function(value){
               config.tooltipTextSelector = value;
             },
@@ -42,6 +45,7 @@ angular.module('ui.tab.scroll', [])
                 showTooltips: config.showTooltips,
                 tooltipLeftPlacement: config.tooltipLeftPlacement,
                 tooltipRightPlacement: config.tooltipRightPlacement,
+                scrollBy: config.scrollBy,
                 tooltipTextSelector: config.tooltipTextSelector
               };
             }
@@ -60,6 +64,7 @@ angular.module('ui.tab.scroll', [])
             showTooltips: '@',
             tooltipLeftPlacement: '@',
             tooltipRightPlacement: '@',
+            scrollBy: '@',
             tooltipTextSelector: '@',
             api: '='
           },
@@ -68,7 +73,12 @@ angular.module('ui.tab.scroll', [])
             $scope.api = {
               doRecalculate: function(){
                 $timeout(function(){$scope.reCalcAll()});
+              },
+
+              scrollTabIntoView: function(arg){
+                $timeout(function(){$scope.scrollTabIntoView(arg)});
               }
+
             };
           }],
 
@@ -206,6 +216,25 @@ angular.module('ui.tab.scroll', [])
               $scope.reCalcToTheRight();
             };
 
+            $scope.scrollTabIntoView = function(arg){
+
+              var argInt = parseInt(arg);
+
+              if(argInt) { // scroll tab index into view
+                var allTabs = $scope.tabContainer.querySelectorAll('li');
+                if(allTabs.length > argInt) { // only if its really exist
+                  $scope.tabContainer.scrollLeft = allTabs[argInt].offsetLeft - ($scope.tabContainer.clientWidth / 2) - 25;
+                }
+              }
+
+              else { // scroll selected tab into view
+                var activeTab = $scope.tabContainer.querySelector('li.active');
+                $scope.tabContainer.scrollLeft = activeTab.offsetLeft - ($scope.tabContainer.clientWidth / 2) - 25;
+              }
+
+              $scope.reCalcAll();
+            };
+
             // init is called only once!
             $scope.init = function() {
               $scope.tabContainer = $el[0].querySelector('.spacer').querySelector('ul.nav.nav-tabs');
@@ -214,8 +243,9 @@ angular.module('ui.tab.scroll', [])
               var leftNav = angular.element($el[0].querySelector('.left-nav-button'));
               var rightNav = angular.element($el[0].querySelector('.right-nav-button'));
 
-              bindHoldFunctionTo(leftNav, generateScrollFunction($scope.tabContainer, -100));
-              bindHoldFunctionTo(rightNav, generateScrollFunction($scope.tabContainer, 100));
+              var scrollByPixels = parseInt($scope.scrollBy ? $scope.scrollBy : scrollableTabsetConfig.scrollBy);
+              bindHoldFunctionTo(leftNav, generateScrollFunction($scope.tabContainer, 0-scrollByPixels));
+              bindHoldFunctionTo(rightNav, generateScrollFunction($scope.tabContainer, scrollByPixels));
 
               $scope.reCalcAll();
             };
