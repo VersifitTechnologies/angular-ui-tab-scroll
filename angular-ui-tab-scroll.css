@@ -2,7 +2,7 @@
  * angular-ui-tab-scroll
  * https://github.com/VersifitTechnologies/angular-ui-tab-scroll
  *
- * Version: 1.2.0
+ * Version: 1.2.1
  * License: MIT
  */
  
@@ -84,11 +84,11 @@
 }
 
 .right-nav-button:before{
-  font-family: 'Glyphicons Halflings';;
+  font-family: 'Glyphicons Halflings';
   content: '\e080';
 }
 
 .left-nav-button:before{
-  font-family: 'Glyphicons Halflings';;
+  font-family: 'Glyphicons Halflings';
   content: '\e079';
 }

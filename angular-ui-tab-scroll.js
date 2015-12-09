@@ -2,7 +2,7 @@
  * angular-ui-tab-scroll
  * https://github.com/VersifitTechnologies/angular-ui-tab-scroll
  *
- * Version: 1.2.0
+ * Version: 1.2.1
  * License: MIT
  */
 
@@ -102,7 +102,7 @@ angular.module('ui.tab.scroll', [])
             $scope.tooltipRightDirection =  $scope.tooltipRightPlacement ? $scope.tooltipRightPlacement : scrollableTabsetConfig.tooltipRightPlacement;
 
             var mouseDownInterval = null;
-            var showTooltips = $scope.showTooltips ? $scope.showTooltips : scrollableTabsetConfig.showTooltips;
+            var showTooltips = $scope.showTooltips ? $scope.showTooltips === 'true' : scrollableTabsetConfig.showTooltips;
 
             var cancelId = function() {
               if(mouseDownInterval) {
