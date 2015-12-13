@@ -19,7 +19,7 @@ angular.module('ui.tab.scroll', [])
             //select the innermost child that isn't a span
             //this way we cover getting <tab-heading> and <tab heading=''>
             //but leave other markup out of it, unless it's a span (commonly an icon)
-            tooltipTextSelector: 'tab-heading'
+            tabHeaderSelector: 'tab-heading'
           };
 
           var config = angular.extend({}, defaultConfig);
@@ -37,8 +37,8 @@ angular.module('ui.tab.scroll', [])
             setScrollBy : function(value){
               config.scrollBy = value;
             },
-            setTooltipTextSelector : function(value){
-              config.tooltipTextSelector = value;
+            setTabHeaderSelector : function(value){
+              config.tabHeaderSelector = value;
             },
             $get: function(){
               return {
@@ -46,7 +46,7 @@ angular.module('ui.tab.scroll', [])
                 tooltipLeftPlacement: config.tooltipLeftPlacement,
                 tooltipRightPlacement: config.tooltipRightPlacement,
                 scrollBy: config.scrollBy,
-                tooltipTextSelector: config.tooltipTextSelector
+                tabHeaderSelector: config.tabHeaderSelector
               };
             }
           };
@@ -65,7 +65,7 @@ angular.module('ui.tab.scroll', [])
             tooltipLeftPlacement: '@',
             tooltipRightPlacement: '@',
             scrollBy: '@',
-            tooltipTextSelector: '@',
+            tabHeaderSelector: '@',
             api: '='
           },
 
@@ -144,13 +144,13 @@ angular.module('ui.tab.scroll', [])
               element.on('mouseup', mouseUp);
             };
 
-            var findStringForTooltip = function(node) {
-              var selector = $scope.tooltipTextSelector ? $scope.tooltipTextSelector : scrollableTabsetConfig.tooltipTextSelector;
+            var getTabHeaderFromTab = function(node) {
+              var selector = $scope.tabHeaderSelector ? $scope.tabHeaderSelector : scrollableTabsetConfig.tabHeaderSelector;
               var nodeSelector = node.querySelector(selector);
               if(nodeSelector) {
                 var html = angular.element(nodeSelector).html().trim();
                 if (html) {
-                  return html.split(' ').join('&nbsp;');
+                  return html;
                 }
               }
             };
@@ -167,53 +167,43 @@ angular.module('ui.tab.scroll', [])
               };
             };
 
-            $scope.reCalcToTheLeft = function() {
-              if(!$scope.tabContainer || $scope.hideButtons)return;
-
-              var allTooltips = [];
-              var allTabs = $scope.tabContainer.querySelectorAll('li');
-              angular.forEach(allTabs, function(node) {
-
-                var leftPosition = node.getBoundingClientRect().left - $scope.tabContainer.getBoundingClientRect().left;
-
-                if (leftPosition >= 0 ) return;
-
-                var nodeString = findStringForTooltip(node);
-                if(nodeString)allTooltips.push(nodeString);
-
-              });
-
-              var tooltipsHtml = allTooltips.join('<br>');
-              $scope.tooltipLeftHtml = showTooltips ? $sce.trustAsHtml(tooltipsHtml) : '';
-              $scope.disableLeft = !tooltipsHtml;
-            };
-
-            $scope.reCalcToTheRight = function() {
-              if(!$scope.tabContainer || $scope.hideButtons)return;
-
-              var allTooltips = [];
-
-              var allTabs = $scope.tabContainer.querySelectorAll('li');
-              angular.forEach(allTabs, function(node) {
-
-                var leftPosition = parseInt(node.getBoundingClientRect().left + node.getBoundingClientRect().width - $scope.tabContainer.getBoundingClientRect().left);
-                var tabsWidth = $scope.tabContainer.getBoundingClientRect().width;
-                if(leftPosition <= tabsWidth ) return;
-
-                var nodeString = findStringForTooltip(node);
-                if(nodeString)allTooltips.push(nodeString);
-
-              });
-
-              var tooltipsHtml = allTooltips.join('<br>');
-              $scope.tooltipRightHtml = showTooltips ? $sce.trustAsHtml(tooltipsHtml) : '';
-              $scope.disableRight = !tooltipsHtml;
-            };
-
             $scope.reCalcSides = function() {
               if(!$scope.tabContainer || $scope.hideButtons)return;
-              $scope.reCalcToTheLeft();
-              $scope.reCalcToTheRight();
+              $scope.disableRight = $scope.tabContainer.scrollLeft >= $scope.tabContainer.scrollWidth - $scope.tabContainer.offsetWidth;
+              $scope.disableLeft = $scope.tabContainer.scrollLeft <= 0;
+
+              if(showTooltips){
+                $scope.reCalcTooltips();
+              }
+            };
+
+            $scope.reCalcTooltips = function(){
+              if(!$scope.tabContainer || $scope.hideButtons)return;
+              var rightTooltips = [];
+              var leftTooltips = [];
+
+              var allTabs = $scope.tabContainer.querySelectorAll('li');
+              angular.forEach(allTabs, function(tab) {
+                var tabHeader = getTabHeaderFromTab(tab);
+
+                var rightPosition = parseInt(tab.getBoundingClientRect().left + tab.getBoundingClientRect().width - $scope.tabContainer.getBoundingClientRect().left);
+                var leftPosition = tab.getBoundingClientRect().left - $scope.tabContainer.getBoundingClientRect().left;
+
+                if(rightPosition > $scope.tabContainer.offsetWidth ) {
+                  if (tabHeader)rightTooltips.push(tabHeader.split(' ').join('&nbsp;'));
+                }
+
+                if (leftPosition < 0 ) {
+                  if (tabHeader)leftTooltips.push(tabHeader.split(' ').join('&nbsp;'));
+                }
+
+              });
+
+              var rightTooltipsHtml = rightTooltips.join('<br>');
+              $scope.tooltipRightHtml = $sce.trustAsHtml(rightTooltipsHtml);
+
+              var leftTooltipsHtml = leftTooltips.join('<br>');
+              $scope.tooltipLeftHtml = $sce.trustAsHtml(leftTooltipsHtml);
             };
 
             $scope.scrollTabIntoView = function(arg){
