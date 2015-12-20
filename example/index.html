@@ -11,6 +11,16 @@
   <link rel="stylesheet" href="../angular-ui-tab-scroll.css" />
   <script src="../angular-ui-tab-scroll.js"></script>
 
+  <style>
+    .tabContent{
+      background-color: #FBFBFB;
+      height: 100%;
+      text-align: center;
+      padding-top: 50px
+    }
+  </style>
+
+
 </head>
 
 <body>
@@ -20,10 +30,18 @@
 
   <br/><br/><br/><br/>
   <scrollable-tabset api="main.scrlTabsApi" tooltip-left-placement="top">
-    <tabset>
+    <tabset style="height: 300px">
+      <tab>
+        <tab-heading>First tab</tab-heading>
+        <div class="tabContent">First tab content</div>
+      </tab>
       <tab ng-repeat="tab in main.tabs">
         <tab-heading>{{tab.heading}}</tab-heading>
-        <div style="background-color: #FBFBFB; padding: 50px">{{tab.content}}</div>
+        <div class="tabContent">{{tab.content}}</div>
+      </tab>
+      <tab>
+        <tab-heading>Last tab</tab-heading>
+        <div class="tabContent">Last tab content</div>
       </tab>
     </tabset>
   </scrollable-tabset>

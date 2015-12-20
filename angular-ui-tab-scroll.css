@@ -2,7 +2,7 @@
  * angular-ui-tab-scroll
  * https://github.com/VersifitTechnologies/angular-ui-tab-scroll
  *
- * Version: 1.2.3
+ * Version: 1.2.4
  * License: MIT
  */
  
@@ -33,21 +33,20 @@
 }
 
 .ui-tabs-scrollable .nav > li {
-  margin-right: -3px;
   float: none;
   display: inline-block;
   height: 42px;
-  border-bottom: 1px solid #ddd;
 }
 
-.ui-tabs-scrollable .spacer:not(.hidden-buttons) .nav > li:first-child.active a,
-.ui-tabs-scrollable .spacer:not(.hidden-buttons) .nav > li:first-child a:hover {
+.ui-tabs-scrollable .spacer:not(.hidden-buttons) .nav-tabs > li:first-child.active a,
+.ui-tabs-scrollable .spacer:not(.hidden-buttons) .nav-tabs > li:first-child a:hover {
   border-top-left-radius: 0;
   border-left: 1px solid transparent;
 }
 
-.ui-tabs-scrollable .spacer:not(.hidden-buttons) .nav > li:last-child.active a,
-.ui-tabs-scrollable .spacer:not(.hidden-buttons) .nav > li:last-child a:hover {
+.ui-tabs-scrollable .spacer:not(.hidden-buttons) .nav-tabs > li:last-child.active a,
+.ui-tabs-scrollable .spacer:not(.hidden-buttons) .nav-tabs > li:last-child a,
+.ui-tabs-scrollable .spacer:not(.hidden-buttons) .nav-tabs > li:last-child a:hover {
   border-top-right-radius: 0;
   border-right: 1px solid transparent;
   margin-right: -1px;
@@ -91,4 +90,19 @@
 .left-nav-button:before{
   font-family: 'Glyphicons Halflings';
   content: '\e079';
+}
+
+/*make the tabs content be height 100%*/
+.ui-tabs-scrollable .spacer {
+  height: 100%;
+}
+.ui-tabs-scrollable .spacer > div:first-child {
+  height: 100%;
+}
+.ui-tabs-scrollable .spacer > div:first-child .tab-content {
+  height: 100%;
+}
+.ui-tabs-scrollable .spacer > div:first-child .tab-content .active {
+  height: 100%;
+  overflow: auto;
 }

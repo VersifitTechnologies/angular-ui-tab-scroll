@@ -2,7 +2,7 @@
  * angular-ui-tab-scroll
  * https://github.com/VersifitTechnologies/angular-ui-tab-scroll
  *
- * Version: 1.2.3
+ * Version: 1.2.4
  * License: MIT
  */
 
@@ -94,6 +94,7 @@ angular.module('ui.tab.scroll', [])
 
           link: function($scope, $el) {
 
+            $scope.hideButtons = true;
             $scope.tooltipRightHtml = '';
             $scope.tooltipLeftHtml = '';
             $scope.disableLeft = true;
@@ -243,7 +244,16 @@ angular.module('ui.tab.scroll', [])
             // re-calculate if the scroll buttons are needed, than call re-calculate for both buttons.
             $scope.reCalcAll = function() {
               if(!$scope.tabContainer)return;
-              $scope.hideButtons = $scope.tabContainer.scrollWidth === $scope.tabContainer.getBoundingClientRect().width;
+
+              // combating whitespace with javascript.
+              angular.forEach($scope.tabContainer.childNodes, function(node) {
+                if(node.nodeType === 3 && !node.nodeValue.trim()
+                    && node.nextElementSibling && node.nextElementSibling.tagName === "LI"){
+                  node.parentNode.removeChild(node);
+                }
+              });
+
+              $scope.hideButtons = $scope.tabContainer.scrollWidth <= $scope.tabContainer.offsetWidth;
 
               if(!$scope.hideButtons) {
                 $scope.reCalcSides();
