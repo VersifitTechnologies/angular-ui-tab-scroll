@@ -2,7 +2,7 @@
  * angular-ui-tab-scroll
  * https://github.com/VersifitTechnologies/angular-ui-tab-scroll
  *
- * Version: 1.2.4
+ * Version: 1.2.5
  * License: MIT
  */
  
@@ -93,16 +93,16 @@
 }
 
 /*make the tabs content be height 100%*/
-.ui-tabs-scrollable .spacer {
+.ui-tabs-scrollable > .spacer {
   height: 100%;
 }
-.ui-tabs-scrollable .spacer > div:first-child {
+.ui-tabs-scrollable > .spacer > div:first-child {
   height: 100%;
 }
-.ui-tabs-scrollable .spacer > div:first-child .tab-content {
+.ui-tabs-scrollable > .spacer > div:first-child > .tab-content {
   height: 100%;
 }
-.ui-tabs-scrollable .spacer > div:first-child .tab-content .active {
+.ui-tabs-scrollable > .spacer > div:first-child > .tab-content > .active {
   height: 100%;
   overflow: auto;
 }
