@@ -2,10 +2,10 @@
  * angular-ui-tab-scroll
  * https://github.com/VersifitTechnologies/angular-ui-tab-scroll
  *
- * Version: 1.2.5
+ * Version: 1.2.6
  * License: MIT
  */
- 
+
 .ui-tabs-scrollable {
   position: relative;
 }
@@ -34,7 +34,7 @@
 
 .ui-tabs-scrollable .nav > li {
   float: none;
-  display: inline-block;
+  display: table-cell;
   height: 42px;
 }
 

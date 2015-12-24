@@ -2,7 +2,7 @@
  * angular-ui-tab-scroll
  * https://github.com/VersifitTechnologies/angular-ui-tab-scroll
  *
- * Version: 1.2.5
+ * Version: 1.2.6
  * License: MIT
  */
 
@@ -208,6 +208,7 @@ angular.module('ui.tab.scroll', [])
             };
 
             $scope.scrollTabIntoView = function(arg){
+              if(!$scope.tabContainer || $scope.hideButtons)return;
 
               var argInt = parseInt(arg);
 
@@ -220,7 +221,9 @@ angular.module('ui.tab.scroll', [])
 
               else { // scroll selected tab into view
                 var activeTab = $scope.tabContainer.querySelector('li.active');
-                $scope.tabContainer.scrollLeft = activeTab.offsetLeft - ($scope.tabContainer.clientWidth / 2) - 25;
+                if(activeTab) {
+                  $scope.tabContainer.scrollLeft = activeTab.offsetLeft - ($scope.tabContainer.clientWidth / 2) - 25;
+                }
               }
 
               $scope.reCalcAll();
@@ -244,14 +247,6 @@ angular.module('ui.tab.scroll', [])
             // re-calculate if the scroll buttons are needed, than call re-calculate for both buttons.
             $scope.reCalcAll = function() {
               if(!$scope.tabContainer)return;
-
-              // combating whitespace with javascript.
-              angular.forEach($scope.tabContainer.childNodes, function(node) {
-                if(node.nodeType === 3 && !node.nodeValue.trim()
-                    && node.nextElementSibling && node.nextElementSibling.tagName === "LI"){
-                  node.parentNode.removeChild(node);
-                }
-              });
 
               $scope.hideButtons = $scope.tabContainer.scrollWidth <= $scope.tabContainer.offsetWidth;
 
