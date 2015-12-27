@@ -30,3 +30,6 @@ bower_components
 
 # ignore WebStorm files.
 .idea
+
+# ignore css map files.
+*.css.map
