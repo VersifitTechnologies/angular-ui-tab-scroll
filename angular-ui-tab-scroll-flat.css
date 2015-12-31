@@ -1,0 +1,99 @@
+/*
+ * angular-ui-tab-scroll
+ * https://github.com/VersifitTechnologies/angular-ui-tab-scroll
+ *
+ * Version: 1.3.1
+ * License: MIT
+ */
+.ui-tabs-scrollable {
+  position: relative; }
+  .ui-tabs-scrollable > .spacer:not(.hidden-buttons) {
+    margin-left: 0;
+    margin-right: calc(20px + 20px); }
+    .ui-tabs-scrollable > .spacer:not(.hidden-buttons) > div:first-child > .tab-content {
+      margin-left: 0px;
+      margin-right: -40px; }
+  .ui-tabs-scrollable > .spacer.hidden-buttons > div:first-child > .nav-tabs > li:last-child > a {
+    border-right-color: #d9d9d9; }
+  .ui-tabs-scrollable > .spacer.hidden-buttons > div:first-child > .nav-tabs > li:last-child.active > a {
+    border-right-color: #999; }
+  .ui-tabs-scrollable > .spacer > div:first-child > .nav-tabs {
+    white-space: nowrap;
+    overflow: hidden;
+    border: none; }
+    .ui-tabs-scrollable > .spacer > div:first-child > .nav-tabs > li {
+      float: none;
+      display: table-cell;
+      margin: 0; }
+      .ui-tabs-scrollable > .spacer > div:first-child > .nav-tabs > li.active > a {
+        border-radius: 3px 3px 0 0;
+        border-color: #999;
+        border-bottom-color: transparent;
+        background-color: #FBFBFB;
+        color: #000; }
+      .ui-tabs-scrollable > .spacer > div:first-child > .nav-tabs > li.active + li > a {
+        border-left-color: #F2F2F2; }
+      .ui-tabs-scrollable > .spacer > div:first-child > .nav-tabs > li.active + li > a:hover {
+        border-left-color: #e5e5e5; }
+      .ui-tabs-scrollable > .spacer > div:first-child > .nav-tabs > li:not(.active) > a {
+        border-bottom-color: #999; }
+        .ui-tabs-scrollable > .spacer > div:first-child > .nav-tabs > li:not(.active) > a:hover {
+          background-color: #e5e5e5; }
+      .ui-tabs-scrollable > .spacer > div:first-child > .nav-tabs > li > a {
+        line-height: 35px;
+        font-size: 12px;
+        overflow: hidden;
+        background-color: #F2F2F2;
+        border: 1px solid #d9d9d9;
+        border-right-color: transparent;
+        border-radius: 0;
+        padding: 0 15px;
+        margin: 0;
+        color: #666666; }
+  .ui-tabs-scrollable > .spacer > div:first-child > .tab-content {
+    margin-top: -1px;
+    border-top: 1px solid #999; }
+  .ui-tabs-scrollable > .nav-button {
+    position: absolute;
+    width: 20px;
+    line-height: 35px;
+    top: 0;
+    cursor: pointer;
+    text-align: center;
+    border: 1px solid #d9d9d9;
+    border-bottom-color: #999;
+    border-radius: 0;
+    padding: 0;
+    background-color: #fff;
+    z-index: 10;
+    box-shadow: none; }
+    .ui-tabs-scrollable > .nav-button:hover, .ui-tabs-scrollable > .nav-button:active {
+      background-color: #e5e5e5; }
+    .ui-tabs-scrollable > .nav-button:before {
+      font-family: 'Glyphicons Halflings';
+      color: #666666;
+      font-size: 10px; }
+    .ui-tabs-scrollable > .nav-button:disabled:before {
+      color: #c5c5c5; }
+    .ui-tabs-scrollable > .nav-button.left-nav-button {
+      right: 20px;
+      border-right: 0; }
+      .ui-tabs-scrollable > .nav-button.left-nav-button:before {
+        content: '\e257'; }
+    .ui-tabs-scrollable > .nav-button.right-nav-button {
+      right: 0; }
+      .ui-tabs-scrollable > .nav-button.right-nav-button:before {
+        content: '\e258'; }
+
+/*make the tabs content be height 100%*/
+.ui-tabs-scrollable > .spacer {
+  height: 100%; }
+  .ui-tabs-scrollable > .spacer > div:first-child {
+    height: 100%; }
+    .ui-tabs-scrollable > .spacer > div:first-child > .tab-content {
+      height: 100%; }
+      .ui-tabs-scrollable > .spacer > div:first-child > .tab-content > .active {
+        height: 100%;
+        overflow: auto; }
+
+/*# sourceMappingURL=angular-ui-tab-scroll-flat.css.map */

@@ -1,0 +1,169 @@
+/*
+ * angular-ui-tab-scroll
+ * https://github.com/VersifitTechnologies/angular-ui-tab-scroll
+ *
+ * Version: 1.3.1
+ * License: MIT
+ */
+
+$button-width: 20px;
+$header-height: 35px;
+
+$border-color: #d9d9d9;
+$not-active-hover-color: #e5e5e5;
+$not-active-background-color: #F2F2F2;
+$not-active-text-color: #666666;
+$active-background-color: #FBFBFB;
+$active-text-color: #000;
+$active-border-color: #999;
+$active-border-radius: 3px;
+
+.ui-tabs-scrollable {
+  position: relative;
+
+  > .spacer {
+    &:not(.hidden-buttons) {
+      margin-left: 0;
+      margin-right: calc(#{$button-width} + #{$button-width});
+      > div:first-child {
+        > .tab-content {
+          margin-left: 0px;
+          margin-right: -40px;
+        }
+      }
+    }
+    &.hidden-buttons {
+      > div:first-child {
+        > .nav-tabs {
+          > li:last-child {
+            > a {
+              border-right-color: $border-color;
+            }
+            &.active {
+              > a {
+                border-right-color: $active-border-color;
+              }
+            }
+          }
+        }
+      }
+    }
+    > div:first-child {
+      > .nav-tabs {
+        white-space: nowrap;
+        overflow: hidden;
+        border: none;
+        > li {
+          float: none;
+          display: table-cell;
+          margin: 0;
+          &.active {
+            > a {
+              border-radius: $active-border-radius $active-border-radius 0 0;
+              border-color: $active-border-color;
+              border-bottom-color: transparent;
+              background-color: $active-background-color;
+              color: $active-text-color;
+            }
+            & + li {
+              > a {
+                border-left-color: $not-active-background-color;
+              }
+            }
+            & + li {
+              > a:hover {
+                border-left-color: $not-active-hover-color;
+              }
+            }
+          }
+          &:not(.active) {
+            > a {
+              border-bottom-color: $active-border-color;
+              &:hover {
+                background-color: $not-active-hover-color;
+              }
+            }
+          }
+          > a {
+            line-height: $header-height;
+            font-size: 12px;
+            overflow: hidden;
+            background-color: $not-active-background-color;
+            border: 1px solid $border-color;
+            border-right-color: transparent;
+            border-radius: 0;
+            padding: 0 15px;
+            margin: 0;
+            color: $not-active-text-color;
+          }
+        }
+
+
+      }
+      > .tab-content {
+        margin-top: -1px;
+        border-top: 1px solid $active-border-color;
+      }
+    }
+  }
+
+  > .nav-button {
+    &:hover, &:active{
+      background-color: #e5e5e5;
+    }
+    &:before {
+      font-family: 'Glyphicons Halflings';
+      color: #666666;
+      font-size: 10px;
+    }
+    &:disabled {
+      &:before {
+        color: #c5c5c5;
+      }
+    }
+    position: absolute;
+    width: $button-width;
+    line-height: $header-height;
+    top: 0;
+    cursor: pointer;
+    text-align: center;
+    border: 1px solid $border-color;
+    border-bottom-color: $active-border-color;
+    border-radius: 0;
+    padding: 0;
+    background-color: #fff;
+    z-index: 10;
+    box-shadow: none;
+
+    &.left-nav-button {
+      right: $button-width;
+      border-right: 0;
+      &:before {
+        content: '\e257';
+      }
+    }
+
+    &.right-nav-button {
+      right: 0;
+      &:before {
+        content: '\e258';
+      }
+    }
+  }
+}
+
+/*make the tabs content be height 100%*/
+.ui-tabs-scrollable > .spacer {
+  height: 100%;
+  > div:first-child {
+    height: 100%;
+    > .tab-content {
+      height: 100%;
+      > .active {
+        height: 100%;
+        overflow: auto;
+      }
+    }
+  }
+}
+
