@@ -2,7 +2,7 @@
  * angular-ui-tab-scroll
  * https://github.com/VersifitTechnologies/angular-ui-tab-scroll
  *
- * Version: 1.3.1
+ * Version: 2.0.0
  * License: MIT
  */
 .ui-tabs-scrollable {
@@ -12,7 +12,7 @@
     margin-right: calc(20px + 20px); }
     .ui-tabs-scrollable > .spacer:not(.hidden-buttons) > div:first-child > .tab-content {
       margin-left: 0px;
-      margin-right: -40px; }
+      margin-right: calc(-20px - 20px); }
   .ui-tabs-scrollable > .spacer.hidden-buttons > div:first-child > .nav-tabs > li:last-child > a {
     border-right-color: #d9d9d9; }
   .ui-tabs-scrollable > .spacer.hidden-buttons > div:first-child > .nav-tabs > li:last-child.active > a {
@@ -39,8 +39,13 @@
         border-bottom-color: #999; }
         .ui-tabs-scrollable > .spacer > div:first-child > .nav-tabs > li:not(.active) > a:hover {
           background-color: #e5e5e5; }
+      .ui-tabs-scrollable > .spacer > div:first-child > .nav-tabs > li.disabled:not(.active) > a {
+        color: #9d9d9d; }
+        .ui-tabs-scrollable > .spacer > div:first-child > .nav-tabs > li.disabled:not(.active) > a:hover {
+          background-color: #F2F2F2; }
       .ui-tabs-scrollable > .spacer > div:first-child > .nav-tabs > li > a {
         line-height: 35px;
+        height: 35px;
         font-size: 12px;
         overflow: hidden;
         background-color: #F2F2F2;
@@ -57,6 +62,7 @@
     position: absolute;
     width: 20px;
     line-height: 35px;
+    height: 35px;
     top: 0;
     cursor: pointer;
     text-align: center;
@@ -71,7 +77,7 @@
       background-color: #e5e5e5; }
     .ui-tabs-scrollable > .nav-button:before {
       font-family: 'Glyphicons Halflings';
-      color: #666666;
+      color: #666;
       font-size: 10px; }
     .ui-tabs-scrollable > .nav-button:disabled:before {
       color: #c5c5c5; }
@@ -84,6 +90,47 @@
       right: 0; }
       .ui-tabs-scrollable > .nav-button.right-nav-button:before {
         content: '\e258'; }
+  .ui-tabs-scrollable > .btn-group {
+    position: absolute;
+    top: 0;
+    right: 0; }
+    .ui-tabs-scrollable > .btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) {
+      width: 20px;
+      line-height: 35px;
+      height: 35px;
+      font-size: 10px;
+      color: #666;
+      text-align: center;
+      border: 1px solid #ddd;
+      border-left-width: 0;
+      padding: 0;
+      background-color: #fff;
+      z-index: 10;
+      border-radius: 0;
+      border-bottom-color: #999; }
+      .ui-tabs-scrollable > .btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle):before {
+        font-family: 'Glyphicons Halflings';
+        content: '\e259';
+        font-size: 10px; }
+    .ui-tabs-scrollable > .btn-group .dropDownTabActiveMark:before {
+      font-family: 'Glyphicons Halflings';
+      content: '\e072';
+      padding-right: 7px;
+      font-size: 10px;
+      color: #777; }
+    .ui-tabs-scrollable > .btn-group > .dropdown-menu {
+      min-width: 0;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2); }
+      .ui-tabs-scrollable > .btn-group > .dropdown-menu > li > a {
+        padding: 3px 15px; }
+  .ui-tabs-scrollable.show-drop-down > .spacer:not(.hidden-buttons) {
+    margin-right: calc(20px + 20px + 20px); }
+    .ui-tabs-scrollable.show-drop-down > .spacer:not(.hidden-buttons) > div:first-child > .tab-content {
+      margin-right: calc(-20px - 20px - 20px); }
+  .ui-tabs-scrollable.show-drop-down > .nav-button.right-nav-button {
+    right: 20px; }
+  .ui-tabs-scrollable.show-drop-down > .nav-button.left-nav-button {
+    right: calc(20px + 20px); }
 
 /*make the tabs content be height 100%*/
 .ui-tabs-scrollable > .spacer {

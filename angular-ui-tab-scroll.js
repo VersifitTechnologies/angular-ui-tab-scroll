@@ -2,7 +2,7 @@
  * angular-ui-tab-scroll
  * https://github.com/VersifitTechnologies/angular-ui-tab-scroll
  *
- * Version: 1.3.1
+ * Version: 2.0.0
  * License: MIT
  */
 
@@ -11,22 +11,22 @@ angular.module('ui.tab.scroll', [])
 
           //the default options
           var defaultConfig = {
+            showDropDown: true,
             showTooltips: true,
             tooltipLeftPlacement: 'right',
             tooltipRightPlacement: 'left',
             scrollBy: '50',
-
-            //select the innermost child that isn't a span
-            //this way we cover getting <tab-heading> and <tab heading=''>
-            //but leave other markup out of it, unless it's a span (commonly an icon)
-            tabHeaderSelector: 'tab-heading'
+            autoRecalculate: false
           };
 
           var config = angular.extend({}, defaultConfig);
 
           return {
+            setShowDropDown : function(value){
+              config.showDropDown = (value == true);
+            },
             setShowTooltips : function(value){
-              config.showTooltips = value;
+              config.showTooltips = (value == true);
             },
             setTooltipLeftPlacement : function(value){
               config.tooltipLeftPlacement = value;
@@ -37,16 +37,17 @@ angular.module('ui.tab.scroll', [])
             setScrollBy : function(value){
               config.scrollBy = value;
             },
-            setTabHeaderSelector : function(value){
-              config.tabHeaderSelector = value;
+            setAutoRecalculate : function(value){
+              config.autoRecalculate = (value == true);
             },
             $get: function(){
               return {
+                showDropDown: config.showDropDown,
                 showTooltips: config.showTooltips,
                 tooltipLeftPlacement: config.tooltipLeftPlacement,
                 tooltipRightPlacement: config.tooltipRightPlacement,
                 scrollBy: config.scrollBy,
-                tabHeaderSelector: config.tabHeaderSelector
+                autoRecalculate: config.autoRecalculate
               };
             }
           };
@@ -61,11 +62,12 @@ angular.module('ui.tab.scroll', [])
           transclude: true,
 
           scope: {
+            showDropDown: '@',
             showTooltips: '@',
             tooltipLeftPlacement: '@',
             tooltipRightPlacement: '@',
             scrollBy: '@',
-            tabHeaderSelector: '@',
+            autoRecalculate: '@',
             api: '='
           },
 
@@ -83,18 +85,27 @@ angular.module('ui.tab.scroll', [])
           }],
 
           template: [
-            '<div class="ui-tabs-scrollable">',
-            '<button type="button" ng-hide="hideButtons" ng-disabled="disableLeft" class="btn nav-button left-nav-button" tooltip-placement="{{tooltipLeftDirection}}" tooltip-html="tooltipLeftHtml">',
-            '</button>',
-            '<div class="spacer" ng-class="{\'hidden-buttons\': hideButtons}" ng-transclude></div>',
-            '<button type="button" ng-hide="hideButtons" ng-disabled="disableRight" class="btn nav-button right-nav-button" tooltip-placement="{{tooltipRightDirection}}" tooltip-html="tooltipRightHtml">',
-            '</button>',
+            '<div class="ui-tabs-scrollable" ng-class="{\'show-drop-down\': !hideDropDown}">',
+              '<button type="button" ng-hide="hideButtons" ng-disabled="disableLeft" class="btn nav-button left-nav-button" tooltip-placement="{{tooltipLeftDirection}}" tooltip-html="tooltipLeftHtml"></button>',
+              '<div class="spacer" ng-class="{\'hidden-buttons\': hideButtons}" ng-transclude></div>',
+              '<button type="button" ng-hide="hideButtons" ng-disabled="disableRight" class="btn nav-button right-nav-button" tooltip-placement="{{tooltipRightDirection}}" tooltip-html="tooltipRightHtml"></button>',
+              '<div class="btn-group" dropdown is-open="isDropDownOpen" ng-hide="hideDropDown">',
+                '<button type="button" class="btn" dropdown-toggle></button>',
+                '<ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="single-button">',
+                  '<li role="menuitem" ng-repeat="tab in dropdownTabs" ng-class="{\'disabled\': tab.disabled}" ng-click="activateTab(tab)">',
+                    '<a href="#"><span class="dropDownTabActiveMark" ng-style="{\'visibility\': tab.active?\'visible\':\'hidden\'}"></span>{{tab.tabScrollTitle}}</a>',
+                  '</li>',
+                '</ul>',
+              '</div>',
             '</div>'
           ].join(''),
 
           link: function($scope, $el) {
 
+            $scope.dropdownTabs = [];
+            $scope.isDropDownOpen = false;
             $scope.hideButtons = true;
+            $scope.hideDropDown = true;
             $scope.tooltipRightHtml = '';
             $scope.tooltipLeftHtml = '';
             $scope.disableLeft = true;
@@ -103,7 +114,8 @@ angular.module('ui.tab.scroll', [])
             $scope.tooltipRightDirection =  $scope.tooltipRightPlacement ? $scope.tooltipRightPlacement : scrollableTabsetConfig.tooltipRightPlacement;
 
             var mouseDownInterval = null;
-            var showTooltips = $scope.showTooltips ? $scope.showTooltips === 'true' : scrollableTabsetConfig.showTooltips;
+            var showDropDown = $scope.showDropDown ? $scope.showDropDown === 'true' : scrollableTabsetConfig.showDropDown;
+            var showTooltips = $scope.showTooltips ? $scope.showTooltips === 'true' : scrollableTabsetConfig.showTooltips == true;
 
             var cancelId = function() {
               if(mouseDownInterval) {
@@ -145,17 +157,6 @@ angular.module('ui.tab.scroll', [])
               element.on('mouseup', mouseUp);
             };
 
-            var getTabHeaderFromTab = function(node) {
-              var selector = $scope.tabHeaderSelector ? $scope.tabHeaderSelector : scrollableTabsetConfig.tabHeaderSelector;
-              var nodeSelector = node.querySelector(selector);
-              if(nodeSelector) {
-                var html = angular.element(nodeSelector).html().trim();
-                if (html) {
-                  return html;
-                }
-              }
-            };
-
             var onWindowResize = function() {
               $scope.reCalcAll();
               $scope.$apply();
@@ -167,6 +168,14 @@ angular.module('ui.tab.scroll', [])
                 $scope.reCalcSides();
               };
             };
+
+            $scope.activateTab = function(tab) {
+              if(tab.disabled)return;
+              tab.active = true;
+              $timeout(function () {
+                $scope.scrollTabIntoView();
+              });
+            }
 
             $scope.reCalcSides = function() {
               if(!$scope.tabContainer || $scope.hideButtons)return;
@@ -185,17 +194,22 @@ angular.module('ui.tab.scroll', [])
 
               var allTabs = $scope.tabContainer.querySelectorAll('li');
               angular.forEach(allTabs, function(tab) {
-                var tabHeader = getTabHeaderFromTab(tab);
 
                 var rightPosition = parseInt(tab.getBoundingClientRect().left + tab.getBoundingClientRect().width - $scope.tabContainer.getBoundingClientRect().left);
                 var leftPosition = tab.getBoundingClientRect().left - $scope.tabContainer.getBoundingClientRect().left;
+                var heading = tab.getAttribute("data-tabScrollHeading");
+                var ignore = tab.getAttribute("data-tabScrollIgnore");
 
-                if(rightPosition > $scope.tabContainer.offsetWidth ) {
-                  if (tabHeader)rightTooltips.push(tabHeader.split(' ').join('&nbsp;'));
+                if(rightPosition > $scope.tabContainer.offsetWidth && !ignore ) {
+                  if(heading) {
+                    rightTooltips.push(heading)
+                  } else if (tab.textContent)rightTooltips.push(tab.textContent);
                 }
 
-                if (leftPosition < 0 ) {
-                  if (tabHeader)leftTooltips.push(tabHeader.split(' ').join('&nbsp;'));
+                if (leftPosition < 0 && !ignore ) {
+                  if(heading) {
+                    leftTooltips.push(heading)
+                  } else if (tab.textContent)leftTooltips.push(tab.textContent);
                 }
 
               });
@@ -215,14 +229,14 @@ angular.module('ui.tab.scroll', [])
               if(argInt) { // scroll tab index into view
                 var allTabs = $scope.tabContainer.querySelectorAll('li');
                 if(allTabs.length > argInt) { // only if its really exist
-                  $scope.tabContainer.scrollLeft = allTabs[argInt].offsetLeft - ($scope.tabContainer.clientWidth / 2) - 25;
+                  allTabs[argInt].scrollIntoView();
                 }
               }
 
               else { // scroll selected tab into view
                 var activeTab = $scope.tabContainer.querySelector('li.active');
                 if(activeTab) {
-                  $scope.tabContainer.scrollLeft = activeTab.offsetLeft - ($scope.tabContainer.clientWidth / 2) - 25;
+                  activeTab.scrollIntoView();
                 }
               }
 
@@ -231,8 +245,23 @@ angular.module('ui.tab.scroll', [])
 
             // init is called only once!
             $scope.init = function() {
-              $scope.tabContainer = $el[0].querySelector('.spacer').querySelector('ul.nav.nav-tabs');
+              $scope.tabContainer = $el[0].querySelector('.spacer ul.nav-tabs');
               if(!$scope.tabContainer)return;
+
+              var autoRecalc = $scope.autoRecalculate ? $scope.autoRecalculate === 'true' : scrollableTabsetConfig.autoRecalculate;
+              if(autoRecalc) {
+                var tabsetElement = angular.element($el[0].querySelector('.spacer div'));
+                $scope.$watchCollection(
+                    function () {
+                      return tabsetElement.isolateScope() ? tabsetElement.isolateScope().tabs : false;
+                    },
+                    function (newValues, oldValues) {
+                      $timeout(function () {
+                        $scope.reCalcAll()
+                      });
+                    }
+                );
+              }
 
               var leftNav = angular.element($el[0].querySelector('.left-nav-button'));
               var rightNav = angular.element($el[0].querySelector('.right-nav-button'));
@@ -249,8 +278,25 @@ angular.module('ui.tab.scroll', [])
               if(!$scope.tabContainer)return;
 
               $scope.hideButtons = $scope.tabContainer.scrollWidth <= $scope.tabContainer.offsetWidth;
+              $scope.hideDropDown = showDropDown ? $scope.hideButtons : true;
 
               if(!$scope.hideButtons) {
+
+                if(!$scope.hideDropDown) {
+                  var allTabs = $scope.tabContainer.querySelectorAll('li');
+                  $scope.dropdownTabs = [];
+                  angular.forEach(allTabs, function (tab) {
+                    var ignore = tab.getAttribute("data-tabScrollIgnore");
+                    if(!ignore){
+                      var heading = tab.getAttribute("data-tabScrollHeading");
+                      var tabScope = angular.element(tab).isolateScope();
+                      //push new field to use as title in the drop down.
+                      tabScope.tabScrollTitle = heading ? heading : tabScope.headingElement.textContent;
+                      $scope.dropdownTabs.push(tabScope);
+                    }
+                  });
+                }
+
                 $scope.reCalcSides();
               }
             };
