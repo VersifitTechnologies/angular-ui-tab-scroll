@@ -2,7 +2,7 @@
  * angular-ui-tab-scroll
  * https://github.com/VersifitTechnologies/angular-ui-tab-scroll
  *
- * Version: 2.0.0
+ * Version: 2.0.1
  * License: MIT
  */
 
@@ -68,21 +68,8 @@ angular.module('ui.tab.scroll', [])
             tooltipRightPlacement: '@',
             scrollBy: '@',
             autoRecalculate: '@',
-            api: '='
+            api: '=?'
           },
-
-          controller: ['$scope', '$timeout', function($scope, $timeout) {
-            $scope.api = {
-              doRecalculate: function(){
-                $timeout(function(){$scope.reCalcAll()});
-              },
-
-              scrollTabIntoView: function(arg){
-                $timeout(function(){$scope.scrollTabIntoView(arg)});
-              }
-
-            };
-          }],
 
           template: [
             '<div class="ui-tabs-scrollable" ng-class="{\'show-drop-down\': !hideDropDown}">',
@@ -112,6 +99,16 @@ angular.module('ui.tab.scroll', [])
             $scope.disableRight = true;
             $scope.tooltipLeftDirection = $scope.tooltipLeftPlacement ? $scope.tooltipLeftPlacement : scrollableTabsetConfig.tooltipLeftPlacement;
             $scope.tooltipRightDirection =  $scope.tooltipRightPlacement ? $scope.tooltipRightPlacement : scrollableTabsetConfig.tooltipRightPlacement;
+
+            $scope.api = {
+              doRecalculate: function(){
+                $timeout(function(){$scope.reCalcAll()});
+              },
+
+              scrollTabIntoView: function(arg){
+                $timeout(function(){$scope.scrollTabIntoView(arg)});
+              }
+            };
 
             var mouseDownInterval = null;
             var showDropDown = $scope.showDropDown ? $scope.showDropDown === 'true' : scrollableTabsetConfig.showDropDown;
@@ -157,9 +154,13 @@ angular.module('ui.tab.scroll', [])
               element.on('mouseup', mouseUp);
             };
 
-            var onWindowResize = function() {
-              $scope.reCalcAll();
-              $scope.$apply();
+            $scope.onWindowResize = function() {
+              // delay for a bit to avoid running lots of times.
+              clearTimeout(window.resizedFinished);
+              window.resizedFinished = setTimeout(function(){
+                $scope.reCalcAll();
+                $scope.$apply();
+              }, 250);
             };
 
             var generateScrollFunction = function(el, offset) {
@@ -240,7 +241,7 @@ angular.module('ui.tab.scroll', [])
                 }
               }
 
-              $scope.reCalcAll();
+              $scope.reCalcSides();
             };
 
             // init is called only once!
@@ -255,7 +256,7 @@ angular.module('ui.tab.scroll', [])
                     function () {
                       return tabsetElement.isolateScope() ? tabsetElement.isolateScope().tabs : false;
                     },
-                    function (newValues, oldValues) {
+                    function () {
                       $timeout(function () {
                         $scope.reCalcAll()
                       });
@@ -271,6 +272,9 @@ angular.module('ui.tab.scroll', [])
               bindHoldFunctionTo(rightNav, generateScrollFunction($scope.tabContainer, scrollByPixels));
 
               $scope.reCalcAll();
+
+              // attaching event to window resize.
+              angular.element($window).on('resize', $scope.onWindowResize);
             };
 
             // re-calculate if the scroll buttons are needed, than call re-calculate for both buttons.
@@ -301,9 +305,6 @@ angular.module('ui.tab.scroll', [])
               }
             };
 
-            // attaching event to window resize.
-            angular.element($window).on('resize', onWindowResize);
-
             // this is how we init for the first time.
             $timeout(function(){
               $scope.init();
@@ -311,7 +312,7 @@ angular.module('ui.tab.scroll', [])
 
             // when scope destroyed
             $scope.$on('$destroy', function () {
-              angular.element($window).off('resize', onWindowResize);
+              angular.element($window).off('resize', $scope.onWindowResize);
             });
 
           }

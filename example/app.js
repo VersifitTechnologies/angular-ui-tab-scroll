@@ -9,14 +9,18 @@ app.config(function(scrollableTabsetConfigProvider){
 app.controller('MainCtrl', function() {
   var vm = this;
   vm.tabs = [];
-  vm.scrlTabsApi = null;
+  vm.scrlTabsApi = {};
 
   vm.reCalcScroll = function() {
-    vm.scrlTabsApi.doRecalculate();
+    if(vm.scrlTabsApi.doRecalculate) {
+      vm.scrlTabsApi.doRecalculate();
+    }
   };
 
   vm.scrollIntoView = function(arg) {
-    vm.scrlTabsApi.scrollTabIntoView(arg);
+    if(vm.scrlTabsApi.scrollTabIntoView) {
+      vm.scrlTabsApi.scrollTabIntoView(arg)
+    };
   };
 
   vm.addTab = function(){
