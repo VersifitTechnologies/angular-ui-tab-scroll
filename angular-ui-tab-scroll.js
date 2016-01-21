@@ -2,7 +2,7 @@
  * angular-ui-tab-scroll
  * https://github.com/VersifitTechnologies/angular-ui-tab-scroll
  *
- * Version: 2.0.1
+ * Version: 2.0.2
  * License: MIT
  */
 
@@ -154,10 +154,11 @@ angular.module('ui.tab.scroll', [])
               element.on('mouseup', mouseUp);
             };
 
+            var winResizeTimeout
             $scope.onWindowResize = function() {
               // delay for a bit to avoid running lots of times.
-              clearTimeout(window.resizedFinished);
-              window.resizedFinished = setTimeout(function(){
+              clearTimeout(winResizeTimeout);
+              winResizeTimeout = setTimeout(function(){
                 $scope.reCalcAll();
                 $scope.$apply();
               }, 250);
