@@ -2,7 +2,7 @@
  * angular-ui-tab-scroll
  * https://github.com/VersifitTechnologies/angular-ui-tab-scroll
  *
- * Version: 2.0.2
+ * Version: 2.1.0
  * License: MIT
  */
 
@@ -73,9 +73,13 @@ angular.module('ui.tab.scroll', [])
 
           template: [
             '<div class="ui-tabs-scrollable" ng-class="{\'show-drop-down\': !hideDropDown}">',
-              '<button type="button" ng-hide="hideButtons" ng-disabled="disableLeft" class="btn nav-button left-nav-button" tooltip-placement="{{tooltipLeftDirection}}" tooltip-html="tooltipLeftHtml"></button>',
+              '<button type="button" ng-mousedown="scrollButtonDown(\'left\', $event)" ng-mouseup="scrollButtonUp()" ng-hide="hideButtons"' +
+              ' ng-disabled="disableLeft" class="btn nav-button left-nav-button"' +
+              ' tooltip-placement="{{tooltipLeftDirection}}" tooltip-html="tooltipLeftHtml"></button>',
               '<div class="spacer" ng-class="{\'hidden-buttons\': hideButtons}" ng-transclude></div>',
-              '<button type="button" ng-hide="hideButtons" ng-disabled="disableRight" class="btn nav-button right-nav-button" tooltip-placement="{{tooltipRightDirection}}" tooltip-html="tooltipRightHtml"></button>',
+              '<button type="button" ng-mousedown="scrollButtonDown(\'right\', $event)" ng-mouseup="scrollButtonUp()" ng-hide="hideButtons"' +
+              ' ng-disabled="disableRight" class="btn nav-button right-nav-button"' +
+              ' tooltip-placement="{{tooltipRightDirection}}" tooltip-html="tooltipRightHtml"></button>',
               '<div class="btn-group" dropdown is-open="isDropDownOpen" ng-hide="hideDropDown">',
                 '<button type="button" class="btn" dropdown-toggle></button>',
                 '<ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="single-button">',
@@ -111,50 +115,13 @@ angular.module('ui.tab.scroll', [])
             };
 
             var mouseDownInterval = null;
+            var isHolding = false;
+            var winResizeTimeout
+
             var showDropDown = $scope.showDropDown ? $scope.showDropDown === 'true' : scrollableTabsetConfig.showDropDown;
             var showTooltips = $scope.showTooltips ? $scope.showTooltips === 'true' : scrollableTabsetConfig.showTooltips == true;
+            var scrollByPixels = parseInt($scope.scrollBy ? $scope.scrollBy : scrollableTabsetConfig.scrollBy);
 
-            var cancelId = function() {
-              if(mouseDownInterval) {
-                $interval.cancel(mouseDownInterval);
-                mouseDownInterval = null;
-              }
-            };
-
-            var bindHoldFunctionTo = function(element, scrollFunc) {
-              //get rid of the previous mouse events.
-              element.off('mousedown', mouseDown);
-              element.off('mouseup', mouseUp);
-
-              var isHolding = false;
-
-              var mouseDown = function() {
-                isHolding = true;
-
-                scrollFunc();
-
-                mouseDownInterval = $interval(function() {
-                  if(isHolding) {
-                    scrollFunc();
-
-                    if(element[0].disabled) {
-                      cancelId();
-                    }
-                  }
-                }, 100);
-              };
-
-              var mouseUp = function() {
-                isHolding = false;
-                cancelId();
-              };
-
-              // attach mouse events.
-              element.on('mousedown', mouseDown);
-              element.on('mouseup', mouseUp);
-            };
-
-            var winResizeTimeout
             $scope.onWindowResize = function() {
               // delay for a bit to avoid running lots of times.
               clearTimeout(winResizeTimeout);
@@ -164,12 +131,39 @@ angular.module('ui.tab.scroll', [])
               }, 250);
             };
 
-            var generateScrollFunction = function(el, offset) {
-              return function() {
-                el.scrollLeft += offset;
-                $scope.reCalcSides();
-              };
+            var cancelMouseDownInterval = function() {
+              isHolding = false;
+
+              if(mouseDownInterval) {
+                $interval.cancel(mouseDownInterval);
+                mouseDownInterval = null;
+              }
             };
+
+            $scope.scrollButtonDown = function(direction, event) {
+              event.stopPropagation();
+              isHolding = true;
+
+              var realScroll = direction === 'left' ? 0 - scrollByPixels : scrollByPixels;
+              $scope.tabContainer.scrollLeft += realScroll;
+              $scope.reCalcSides();
+
+              mouseDownInterval = $interval(function() {
+
+                if(isHolding) {
+                  $scope.tabContainer.scrollLeft += realScroll;
+                  $scope.reCalcSides();
+
+                  if(event.target.disabled) {
+                    cancelMouseDownInterval();
+                  }
+                }
+              }, 100);
+            }
+
+            $scope.scrollButtonUp = function() {
+              cancelMouseDownInterval();
+            }
 
             $scope.activateTab = function(tab) {
               if(tab.disabled)return;
@@ -264,13 +258,6 @@ angular.module('ui.tab.scroll', [])
                     }
                 );
               }
-
-              var leftNav = angular.element($el[0].querySelector('.left-nav-button'));
-              var rightNav = angular.element($el[0].querySelector('.right-nav-button'));
-
-              var scrollByPixels = parseInt($scope.scrollBy ? $scope.scrollBy : scrollableTabsetConfig.scrollBy);
-              bindHoldFunctionTo(leftNav, generateScrollFunction($scope.tabContainer, 0-scrollByPixels));
-              bindHoldFunctionTo(rightNav, generateScrollFunction($scope.tabContainer, scrollByPixels));
 
               $scope.reCalcAll();
 
