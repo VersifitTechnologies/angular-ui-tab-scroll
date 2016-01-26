@@ -2,7 +2,7 @@
  * angular-ui-tab-scroll
  * https://github.com/VersifitTechnologies/angular-ui-tab-scroll
  *
- * Version: 2.1.2
+ * Version: 2.1.3
  * License: MIT
  */
 
