@@ -84,7 +84,7 @@ angular.module('ui.tab.scroll', [])
                 '<button type="button" class="btn" dropdown-toggle></button>',
                 '<ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="single-button">',
                   '<li role="menuitem" ng-repeat="tab in dropdownTabs" ng-class="{\'disabled\': tab.disabled}" ng-click="activateTab(tab)">',
-                    '<a href="#"><span class="dropDownTabActiveMark" ng-style="{\'visibility\': tab.active?\'visible\':\'hidden\'}"></span>{{tab.tabScrollTitle}}</a>',
+                    '<a href><span class="dropDownTabActiveMark" ng-style="{\'visibility\': tab.active?\'visible\':\'hidden\'}"></span>{{tab.tabScrollTitle}}</a>',
                   '</li>',
                 '</ul>',
               '</div>',
