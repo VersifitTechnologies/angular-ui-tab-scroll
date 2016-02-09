@@ -3,7 +3,7 @@ angular-ui-tab-scroll
 
 A scrollable tab plugin intended for scrolling UI Bootstrap [tabset](https://angular-ui.github.io/bootstrap/#/tabs).
 
-Here is a working demo : http://plnkr.co/edit/YJNDaQ?p=preview
+Here is a working demo : http://plnkr.co/edit/7gp07F?p=preview (by Jesusvilla)
 
 [![npm version](https://img.shields.io/npm/v/angular-ui-tab-scroll.svg?style=flat-square)](https://www.npmjs.com/package/angular-ui-tab-scroll)
 [![npm downloads](https://img.shields.io/npm/dm/angular-ui-tab-scroll.svg?style=flat-square)](http://npm-stat.com/charts.html?package=angular-ui-tab-scroll&from=2015-01-01)
