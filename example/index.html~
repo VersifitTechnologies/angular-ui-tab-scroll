@@ -63,7 +63,7 @@
   </div>
   <div class="btn-group" uib-dropdown>
     <button id="single-button" type="button" class="btn btn-default" uib-dropdown-toggle>
-      Activate index <span class="caret"></span>
+      Active index <span class="caret"></span>
     </button>
     <ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
       <li role="menuitem" ng-click="main.activateTab(1)"><a href="#">Tab index 1</a></li>
