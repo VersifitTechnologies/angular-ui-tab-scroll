@@ -2,7 +2,7 @@
  * angular-ui-tab-scroll
  * https://github.com/VersifitTechnologies/angular-ui-tab-scroll
  *
- * Version: 2.1.3
+ * Version: 2.2.0
  * License: MIT
  */
 
@@ -75,13 +75,13 @@ angular.module('ui.tab.scroll', [])
             '<div class="ui-tabs-scrollable" ng-class="{\'show-drop-down\': !hideDropDown}">',
               '<button type="button" ng-mousedown="scrollButtonDown(\'left\', $event)" ng-mouseup="scrollButtonUp()" ng-hide="hideButtons"' +
               ' ng-disabled="disableLeft" class="btn nav-button left-nav-button"' +
-              ' tooltip-placement="{{tooltipLeftDirection}}" tooltip-html="tooltipLeftHtml"></button>',
+              ' tooltip-placement="{{tooltipLeftDirection}}" uib-tooltip-html="tooltipLeftHtml"></button>',
               '<div class="spacer" ng-class="{\'hidden-buttons\': hideButtons}" ng-transclude></div>',
               '<button type="button" ng-mousedown="scrollButtonDown(\'right\', $event)" ng-mouseup="scrollButtonUp()" ng-hide="hideButtons"' +
               ' ng-disabled="disableRight" class="btn nav-button right-nav-button"' +
-              ' tooltip-placement="{{tooltipRightDirection}}" tooltip-html="tooltipRightHtml"></button>',
-              '<div class="btn-group" dropdown is-open="isDropDownOpen" ng-hide="hideDropDown">',
-                '<button type="button" class="btn" dropdown-toggle></button>',
+              ' tooltip-placement="{{tooltipRightDirection}}" uib-tooltip-html="tooltipRightHtml"></button>',
+              '<div class="btn-group" uib-dropdown is-open="isDropDownOpen" ng-hide="hideDropDown">',
+                '<button type="button" class="btn" uib-dropdown-toggle></button>',
                 '<ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="single-button">',
                   '<li role="menuitem" ng-repeat="tab in dropdownTabs" ng-class="{\'disabled\': tab.disabled}" ng-click="activateTab(tab)">',
                     '<a href><span class="dropDownTabActiveMark" ng-style="{\'visibility\': tab.active?\'visible\':\'hidden\'}"></span>{{tab.tabScrollTitle}}</a>',

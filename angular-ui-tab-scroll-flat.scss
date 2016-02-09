@@ -2,7 +2,7 @@
  * angular-ui-tab-scroll
  * https://github.com/VersifitTechnologies/angular-ui-tab-scroll
  *
- * Version: 2.1.3
+ * Version: 2.2.0
  * License: MIT
  */
 
@@ -124,7 +124,7 @@ $active-border-radius: 3px;
     }
     &:before {
       font-family: 'Glyphicons Halflings';
-      color: #666;
+      color: #8c8c8c;
       font-size: 10px;
     }
     &:disabled {
@@ -151,14 +151,14 @@ $active-border-radius: 3px;
       right: $button-width;
       border-right: 0;
       &:before {
-        content: '\e257';
+        content: '\e079';
       }
     }
 
     &.right-nav-button {
       right: 0;
       &:before {
-        content: '\e258';
+        content: '\e080';
       }
     }
   }
@@ -166,12 +166,12 @@ $active-border-radius: 3px;
     position: absolute;
     top: 0;
     right: 0;
-    > .btn:first-child:not(:last-child):not(.dropdown-toggle) {
+    > .btn:first-child {
       width: $button-width;
       line-height: $header-height;
       height: $header-height;
       font-size: 10px;
-      color: #666;
+      color: #8c8c8c;
       text-align: center;
       border: 1px solid #ddd;
       border-left-width: 0;
@@ -182,7 +182,7 @@ $active-border-radius: 3px;
       border-bottom-color: $active-border-color;
       &:before{
         font-family: 'Glyphicons Halflings';
-        content: '\e259';
+        content: '\e114';
         font-size: 10px;
       }
     }

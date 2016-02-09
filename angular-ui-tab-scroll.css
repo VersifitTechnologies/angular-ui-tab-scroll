@@ -2,7 +2,7 @@
  * angular-ui-tab-scroll
  * https://github.com/VersifitTechnologies/angular-ui-tab-scroll
  *
- * Version: 2.1.3
+ * Version: 2.2.0
  * License: MIT
  */
 .ui-tabs-scrollable {
@@ -64,7 +64,7 @@
     position: absolute;
     top: 0;
     right: 0; }
-    .ui-tabs-scrollable > .btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) {
+    .ui-tabs-scrollable > .btn-group > .btn:first-child {
       width: 25px;
       height: 42px;
       line-height: 42px;
@@ -76,7 +76,7 @@
       background-color: #fff;
       z-index: 10;
       border-radius: 0 4px 0 0; }
-      .ui-tabs-scrollable > .btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle):before {
+      .ui-tabs-scrollable > .btn-group > .btn:first-child:before {
         font-family: 'Glyphicons Halflings';
         content: '\e114'; }
     .ui-tabs-scrollable > .btn-group .dropDownTabActiveMark:before {

@@ -2,9 +2,9 @@
 <html ng-app="TabScrollDemo" ng-controller="MainCtrl as main">
 
 <head>
-  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular.js"></script>
-  <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.13.0.js"></script>
-  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.css" />
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular.js"></script>
+  <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.14.0.js"></script>
+  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.css" />
   <script src="app.js"></script>
 
   <!-- links to files of angular-ui-tab-scroll  -->
@@ -30,20 +30,20 @@
 
   <br/><br/><br/><br/>
   <scrollable-tabset api="main.scrlTabsApi" tooltip-left-placement="top">
-    <tabset style="height: 300px">
-      <tab>
-        <tab-heading>First tab</tab-heading>
+    <uib-tabset style="height: 300px">
+      <uib-tab>
+        <uib-tab-heading>First tab</uib-tab-heading>
         <div class="tabContent">First tab content</div>
-      </tab>
-      <tab ng-repeat="tab in main.tabs">
-        <tab-heading>{{tab.heading}}</tab-heading>
+      </uib-tab>
+      <uib-tab ng-repeat="tab in main.tabs">
+        <uib-tab-heading>{{tab.heading}}</uib-tab-heading>
         <div class="tabContent">{{tab.content}}</div>
-      </tab>
-      <tab>
-        <tab-heading>Last tab</tab-heading>
+      </uib-tab>
+      <uib-tab>
+        <uib-tab-heading>Last tab</uib-tab-heading>
         <div class="tabContent">Last tab content</div>
-      </tab>
-    </tabset>
+      </uib-tab>
+    </uib-tabset>
   </scrollable-tabset>
 
   <br/><br/><br/><br/><br/><br/>
@@ -52,8 +52,8 @@
   <br/><br/><br/>
   <h4>usage of api:</h4>
   <button type="button" class="btn btn-default" ng-click="main.reCalcScroll()">re-calculate scroll</button>
-  <div class="btn-group" dropdown>
-    <button id="single-button" type="button" class="btn btn-default" dropdown-toggle>
+  <div class="btn-group" uib-dropdown>
+    <button id="single-button" type="button" class="btn btn-default" uib-dropdown-toggle>
       Scroll into view <span class="caret"></span>
     </button>
     <ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
