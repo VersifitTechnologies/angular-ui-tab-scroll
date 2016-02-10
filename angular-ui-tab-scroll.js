@@ -2,7 +2,7 @@
  * angular-ui-tab-scroll
  * https://github.com/VersifitTechnologies/angular-ui-tab-scroll
  *
- * Version: 2.2.0
+ * Version: 2.2.1
  * License: MIT
  */
 
@@ -221,18 +221,29 @@ angular.module('ui.tab.scroll', [])
               if(!$scope.tabContainer || $scope.hideButtons)return;
 
               var argInt = parseInt(arg);
+              var tabToScroll;
 
+              // first we find the tab element.
               if(argInt) { // scroll tab index into view
                 var allTabs = $scope.tabContainer.querySelectorAll('li');
                 if(allTabs.length > argInt) { // only if its really exist
-                  allTabs[argInt].scrollIntoView();
+                  tabToScroll = allTabs[argInt];
+                }
+              } else { // scroll selected tab into view
+                var activeTab = $scope.tabContainer.querySelector('li.active');
+                if(activeTab) {
+                  tabToScroll = activeTab;
                 }
               }
 
-              else { // scroll selected tab into view
-                var activeTab = $scope.tabContainer.querySelector('li.active');
-                if(activeTab) {
-                  activeTab.scrollIntoView();
+              // now let's scroll it into view.
+              if(tabToScroll) {
+                var rightPosition = parseInt(tabToScroll.getBoundingClientRect().left + tabToScroll.getBoundingClientRect().width - $scope.tabContainer.getBoundingClientRect().left);
+                var leftPosition = tabToScroll.getBoundingClientRect().left - $scope.tabContainer.getBoundingClientRect().left;
+                if (leftPosition < 0) {
+                  $scope.tabContainer.scrollLeft += leftPosition - 25;
+                } else if(rightPosition > $scope.tabContainer.offsetWidth){
+                  $scope.tabContainer.scrollLeft += rightPosition - $scope.tabContainer.offsetWidth + 25;
                 }
               }
 
