@@ -19,7 +19,7 @@ app.controller('MainCtrl', function() {
 
   vm.scrollIntoView = function(arg) {
     if(vm.scrlTabsApi.scrollTabIntoView) {
-      vm.scrlTabsApi.scrollTabIntoView(arg)
+      vm.scrlTabsApi.scrollTabIntoView(arg);
     };
   };
 
