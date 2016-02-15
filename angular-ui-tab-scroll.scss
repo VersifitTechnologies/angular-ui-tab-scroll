@@ -91,11 +91,11 @@ $header-height: 42px;
       }
     }
   }
-  > .btn-group {
+  > .dropdown {
     position: absolute;
     top: 0;
     right: 0;
-    > .btn:first-child {
+    > .dropdown-toggle {
       width: $button-width;
       height: $header-height;
       line-height: $header-height;
@@ -111,12 +111,6 @@ $header-height: 42px;
         font-family: 'Glyphicons Halflings';
         content: '\e114';
       }
-    }
-    .dropDownTabActiveMark:before {
-      font-family: 'Glyphicons Halflings';
-      content: '\e013';
-      padding-right: 10px;
-      font-size: 12px;
     }
   }
   &.show-drop-down {
@@ -134,6 +128,19 @@ $header-height: 42px;
       &.right-nav-button {
         right: $button-width;
         border-radius: 0;
+      }
+    }
+  }
+}
+
+.dropdown-menu {
+  > li {
+    > a {
+      .dropDownTabActiveMark:before {
+        font-family: 'Glyphicons Halflings';
+        content: '\e013';
+        padding-right: 10px;
+        font-size: 12px;
       }
     }
   }
