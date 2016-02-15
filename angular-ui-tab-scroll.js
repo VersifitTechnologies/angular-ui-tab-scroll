@@ -57,6 +57,34 @@ angular.module('ui.tab.scroll', [])
       'scrollableTabsetConfig', '$window', '$interval', '$timeout','$sce',
       function(scrollableTabsetConfig, $window, $interval, $timeout, $sce) {
 
+        function scrollTo(element, change, duration, callback) {
+          var start = element.scrollLeft,increment = 20;
+
+          var animateScroll = function(elapsedTime) {
+            elapsedTime += increment;
+            var position = easeInOut(elapsedTime, start, change, duration);
+            element.scrollLeft = position;
+            if (elapsedTime < duration) {
+              setTimeout(function() {
+                animateScroll(elapsedTime);
+              }, increment);
+            }else{
+              callback();
+            }
+          };
+
+          animateScroll(0);
+        }
+
+        function easeInOut(currentTime, start, change, duration) {
+          currentTime /= duration / 2;
+          if (currentTime < 1) {
+            return change / 2 * currentTime * currentTime + start;
+          }
+          currentTime -= 1;
+          return -change / 2 * (currentTime * (currentTime - 2) - 1) + start;
+        }
+
         return {
           restrict: 'AE',
           transclude: true,
@@ -80,7 +108,7 @@ angular.module('ui.tab.scroll', [])
               '<button type="button" ng-mousedown="scrollButtonDown(\'right\', $event)" ng-mouseup="scrollButtonUp()" ng-hide="hideButtons"' +
               ' ng-disabled="disableRight" class="btn nav-button right-nav-button"' +
               ' tooltip-placement="{{tooltipRightDirection}}" uib-tooltip-html="tooltipRightHtml"></button>',
-              ' <div class="btn-group" uib-dropdown dropdown-append-to-body ng-hide="hideDropDown">',
+              '<div class="btn-group" uib-dropdown dropdown-append-to-body ng-hide="hideDropDown">',
                 '<button type="button" class="btn" uib-dropdown-toggle></button>',
                 '<ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">',
                   '<li role="menuitem" ng-repeat="tab in dropdownTabs" ng-class="{\'disabled\': tab.disabled}" ng-click="activateTab(tab)">',
@@ -240,13 +268,21 @@ angular.module('ui.tab.scroll', [])
                 var rightPosition = parseInt(tabToScroll.getBoundingClientRect().left + tabToScroll.getBoundingClientRect().width - $scope.tabContainer.getBoundingClientRect().left);
                 var leftPosition = tabToScroll.getBoundingClientRect().left - $scope.tabContainer.getBoundingClientRect().left;
                 if (leftPosition < 0) {
-                  $scope.tabContainer.scrollLeft += leftPosition - 25;
+                  var dif = leftPosition - 20;
+                  scrollTo($scope.tabContainer, dif, 700, function(){
+                    $timeout(function(){
+                      $scope.reCalcSides();
+                    });
+                  });
                 } else if(rightPosition > $scope.tabContainer.offsetWidth){
-                  $scope.tabContainer.scrollLeft += rightPosition - $scope.tabContainer.offsetWidth + 25;
+                  var dif = rightPosition - $scope.tabContainer.offsetWidth + 20;
+                  scrollTo($scope.tabContainer, dif, 700, function(){
+                    $timeout(function(){
+                      $scope.reCalcSides();
+                    });
+                  });
                 }
               }
-
-              $scope.reCalcSides();
             };
 
             // init is called only once!
@@ -316,4 +352,3 @@ angular.module('ui.tab.scroll', [])
           }
         };
       }]);
-
