@@ -57,34 +57,6 @@ angular.module('ui.tab.scroll', [])
       'scrollableTabsetConfig', '$window', '$interval', '$timeout','$sce',
       function(scrollableTabsetConfig, $window, $interval, $timeout, $sce) {
 
-        function scrollTo(element, change, duration, callback) {
-          var start = element.scrollLeft,increment = 20;
-
-          var animateScroll = function(elapsedTime) {
-            elapsedTime += increment;
-            var position = easeInOut(elapsedTime, start, change, duration);
-            element.scrollLeft = position;
-            if (elapsedTime < duration) {
-              setTimeout(function() {
-                animateScroll(elapsedTime);
-              }, increment);
-            }else{
-              callback();
-            }
-          };
-
-          animateScroll(0);
-        }
-
-        function easeInOut(currentTime, start, change, duration) {
-          currentTime /= duration / 2;
-          if (currentTime < 1) {
-            return change / 2 * currentTime * currentTime + start;
-          }
-          currentTime -= 1;
-          return -change / 2 * (currentTime * (currentTime - 2) - 1) + start;
-        }
-
         return {
           restrict: 'AE',
           transclude: true,
@@ -143,11 +115,49 @@ angular.module('ui.tab.scroll', [])
 
             var mouseDownInterval = null;
             var isHolding = false;
-            var winResizeTimeout
+            var winResizeTimeout;
 
             var showDropDown = $scope.showDropDown ? $scope.showDropDown === 'true' : scrollableTabsetConfig.showDropDown;
             var showTooltips = $scope.showTooltips ? $scope.showTooltips === 'true' : scrollableTabsetConfig.showTooltips == true;
             var scrollByPixels = parseInt($scope.scrollBy ? $scope.scrollBy : scrollableTabsetConfig.scrollBy);
+
+            $scope.scrollTo = function(element, change, duration, callback, isLinear) {
+              var start = element.scrollLeft;
+              var increment = 20;
+              var position = 0;
+
+              var animateScroll = function(elapsedTime) {
+                elapsedTime += increment;
+                if(isLinear === true) {
+                  position = $scope.linearTween(elapsedTime, start, change, duration);
+                } else {
+                  position = $scope.easeInOutQuad(elapsedTime, start, change, duration);
+                }
+                element.scrollLeft = position;
+                if (elapsedTime < duration) {
+                  setTimeout(function() {
+                    animateScroll(elapsedTime);
+                  }, increment);
+                }else{
+                  callback();
+                }
+              };
+
+              animateScroll(0);
+            }
+
+            $scope.linearTween = function (currentTime, start, change, duration) {
+              return change * currentTime / duration + start;
+            };
+
+            $scope.easeInOutQuad = function(currentTime, start, change, duration) {
+              currentTime /= duration / 2;
+              if (currentTime < 1) {
+                return change / 2 * currentTime * currentTime + start;
+              }
+              currentTime --;
+              return -change / 2 * (currentTime * (currentTime - 2) - 1) + start;
+            }
 
             $scope.onWindowResize = function() {
               // delay for a bit to avoid running lots of times.
@@ -172,14 +182,20 @@ angular.module('ui.tab.scroll', [])
               isHolding = true;
 
               var realScroll = direction === 'left' ? 0 - scrollByPixels : scrollByPixels;
-              $scope.tabContainer.scrollLeft += realScroll;
-              $scope.reCalcSides();
+              $scope.scrollTo($scope.tabContainer, realScroll, 150, function(){
+                $timeout(function(){
+                  $scope.reCalcSides();
+                });
+              }, true);
 
               mouseDownInterval = $interval(function() {
 
                 if(isHolding) {
-                  $scope.tabContainer.scrollLeft += realScroll;
-                  $scope.reCalcSides();
+                  $scope.scrollTo($scope.tabContainer, realScroll, 150, function(){
+                    $timeout(function(){
+                      $scope.reCalcSides();
+                    });
+                  }, true);
 
                   if(event.target.disabled) {
                     cancelMouseDownInterval();
@@ -269,14 +285,14 @@ angular.module('ui.tab.scroll', [])
                 var leftPosition = tabToScroll.getBoundingClientRect().left - $scope.tabContainer.getBoundingClientRect().left;
                 if (leftPosition < 0) {
                   var dif = leftPosition - 20;
-                  scrollTo($scope.tabContainer, dif, 700, function(){
+                  $scope.scrollTo($scope.tabContainer, dif, 700, function(){
                     $timeout(function(){
                       $scope.reCalcSides();
                     });
                   });
                 } else if(rightPosition > $scope.tabContainer.offsetWidth){
                   var dif = rightPosition - $scope.tabContainer.offsetWidth + 20;
-                  scrollTo($scope.tabContainer, dif, 700, function(){
+                  $scope.scrollTo($scope.tabContainer, dif, 700, function(){
                     $timeout(function(){
                       $scope.reCalcSides();
                     });
