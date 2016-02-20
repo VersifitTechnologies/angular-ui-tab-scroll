@@ -343,7 +343,7 @@ angular.module('ui.tab.scroll', [])
                       var heading = tab.getAttribute("data-tabScrollHeading");
                       var tabScope = angular.element(tab).isolateScope();
                       //push new field to use as title in the drop down.
-                      tabScope.tabScrollTitle = heading ? heading : tabScope.headingElement.textContent;
+                      tabScope.tabScrollTitle = heading ? heading : tab.textContent.trim();
                       $scope.dropdownTabs.push(tabScope);
                     }
                   });
