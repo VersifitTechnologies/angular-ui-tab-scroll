@@ -3,7 +3,7 @@ angular-ui-tab-scroll
 
 A scrollable tab plugin intended for scrolling UI Bootstrap [tabset](https://angular-ui.github.io/bootstrap/#/tabs).
 
-Here is a working demo : http://plnkr.co/edit/7gp07F?p=preview (by Jesusvilla)
+Here is a working demo : http://plnkr.co/edit/YJNDaQ?p=preview
 
 [![npm version](https://img.shields.io/npm/v/angular-ui-tab-scroll.svg?style=flat-square)](https://www.npmjs.com/package/angular-ui-tab-scroll)
 [![npm downloads](https://img.shields.io/npm/dm/angular-ui-tab-scroll.svg?style=flat-square)](http://npm-stat.com/charts.html?package=angular-ui-tab-scroll&from=2015-01-01)
@@ -71,7 +71,6 @@ there is an exposed api, with it you can call:
 * `doRecalculate()` - force a re-calculation of the scroll, this will calculate if the scroll buttons are needed and which to enable\disable. usually needed after a tabs are added or removed.
 * `scrollTabIntoView()` - scroll the selected tab into center of view. or if you want to scroll to a specific tab index:
 * `scrollTabIntoView(number)` - scroll the tab index into center of view.
-* `activateTab(number)` - activate the tab index and scroll the tab index into center of view.
 
 ### Styling
 you can use the default style by referencing `angular-ui-tab-scroll.css`, or you can chose to use the alternative customized flat style by referencing the supplied `angular-ui-tab-scroll-flat.css`.

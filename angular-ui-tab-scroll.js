@@ -2,7 +2,7 @@
  * angular-ui-tab-scroll
  * https://github.com/VersifitTechnologies/angular-ui-tab-scroll
  *
- * Version: 2.2.0
+ * Version: 2.2.2
  * License: MIT
  */
 
@@ -57,34 +57,6 @@ angular.module('ui.tab.scroll', [])
       'scrollableTabsetConfig', '$window', '$interval', '$timeout','$sce',
       function(scrollableTabsetConfig, $window, $interval, $timeout, $sce) {
 
-	function scrollTo(element, change, duration, callback) {
-	     var start = element.scrollLeft,increment = 20;
-
-	     var animateScroll = function(elapsedTime) {
-		 elapsedTime += increment;
-		 var position = easeInOut(elapsedTime, start, change, duration);
-		 element.scrollLeft = position;
-		 if (elapsedTime < duration) {
-		     setTimeout(function() {
-		         animateScroll(elapsedTime);
-		     }, increment);
-		 }else{
-		   callback();
-		 }
-	     };
-
-	     animateScroll(0);
-	 }
-
-	 function easeInOut(currentTime, start, change, duration) {
-	     currentTime /= duration / 2;
-	     if (currentTime < 1) {
-		 return change / 2 * currentTime * currentTime + start;
-	     }
-	     currentTime -= 1;
-	     return -change / 2 * (currentTime * (currentTime - 2) - 1) + start;
-	 }
-
         return {
           restrict: 'AE',
           transclude: true,
@@ -108,9 +80,9 @@ angular.module('ui.tab.scroll', [])
               '<button type="button" ng-mousedown="scrollButtonDown(\'right\', $event)" ng-mouseup="scrollButtonUp()" ng-hide="hideButtons"' +
               ' ng-disabled="disableRight" class="btn nav-button right-nav-button"' +
               ' tooltip-placement="{{tooltipRightDirection}}" uib-tooltip-html="tooltipRightHtml"></button>',
-              '<div class="btn-group" uib-dropdown is-open="isDropDownOpen" ng-hide="hideDropDown">',
+              '<div class="btn-group" uib-dropdown dropdown-append-to-body ng-hide="hideDropDown">',
                 '<button type="button" class="btn" uib-dropdown-toggle></button>',
-                '<ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="single-button">',
+                '<ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">',
                   '<li role="menuitem" ng-repeat="tab in dropdownTabs" ng-class="{\'disabled\': tab.disabled}" ng-click="activateTab(tab)">',
                     '<a href><span class="dropDownTabActiveMark" ng-style="{\'visibility\': tab.active?\'visible\':\'hidden\'}"></span>{{tab.tabScrollTitle}}</a>',
                   '</li>',
@@ -122,7 +94,6 @@ angular.module('ui.tab.scroll', [])
           link: function($scope, $el) {
 
             $scope.dropdownTabs = [];
-            $scope.isDropDownOpen = false;
             $scope.hideButtons = true;
             $scope.hideDropDown = true;
             $scope.tooltipRightHtml = '';
@@ -131,6 +102,12 @@ angular.module('ui.tab.scroll', [])
             $scope.disableRight = true;
             $scope.tooltipLeftDirection = $scope.tooltipLeftPlacement ? $scope.tooltipLeftPlacement : scrollableTabsetConfig.tooltipLeftPlacement;
             $scope.tooltipRightDirection =  $scope.tooltipRightPlacement ? $scope.tooltipRightPlacement : scrollableTabsetConfig.tooltipRightPlacement;
+            $scope.mouseDownInterval = null;
+            $scope.isHolding = false;
+            $scope.winResizeTimeout;
+            $scope.userShowDropDown = $scope.showDropDown ? $scope.showDropDown === 'true' : scrollableTabsetConfig.showDropDown;
+            $scope.userShowTooltips = $scope.showTooltips ? $scope.showTooltips === 'true' : scrollableTabsetConfig.showTooltips == true;
+            $scope.scrollByPixels = parseInt($scope.scrollBy ? $scope.scrollBy : scrollableTabsetConfig.scrollBy);
 
             $scope.api = {
               doRecalculate: function(){
@@ -139,72 +116,94 @@ angular.module('ui.tab.scroll', [])
 
               scrollTabIntoView: function(arg){
                 $timeout(function(){$scope.scrollTabIntoView(arg)});
-              },
-
-	      activateTab: function(arg){
-                $timeout(function(){
-                  var index = parseInt(arg);
-                  if(index){
-                    var tab = $scope.dropdownTabs[index];
-                    if(tab.disabled)return;
-                    tab.active = true;
-                    $timeout(function () {
-                      $scope.scrollTabIntoView();
-                    });
-                  }
-                });
               }
             };
 
-            var mouseDownInterval = null;
-            var isHolding = false;
-            var winResizeTimeout
+            $scope.scrollTo = function(element, change, duration, callback, isLinear) {
+              var start = element.scrollLeft;
+              var increment = 20;
+              var position = 0;
 
-            var showDropDown = $scope.showDropDown ? $scope.showDropDown === 'true' : scrollableTabsetConfig.showDropDown;
-            var showTooltips = $scope.showTooltips ? $scope.showTooltips === 'true' : scrollableTabsetConfig.showTooltips == true;
-            var scrollByPixels = parseInt($scope.scrollBy ? $scope.scrollBy : scrollableTabsetConfig.scrollBy);
+              var animateScroll = function(elapsedTime) {
+                elapsedTime += increment;
+                if(isLinear === true) {
+                  position = $scope.linearTween(elapsedTime, start, change, duration);
+                } else {
+                  position = $scope.easeInOutQuad(elapsedTime, start, change, duration);
+                }
+                element.scrollLeft = position;
+                if (elapsedTime < duration) {
+                  setTimeout(function() {
+                    animateScroll(elapsedTime);
+                  }, increment);
+                }else{
+                  callback();
+                }
+              };
+
+              animateScroll(0);
+            }
+
+            $scope.linearTween = function (currentTime, start, change, duration) {
+              return change * currentTime / duration + start;
+            };
+
+            $scope.easeInOutQuad = function(currentTime, start, change, duration) {
+              currentTime /= duration / 2;
+              if (currentTime < 1) {
+                return change / 2 * currentTime * currentTime + start;
+              }
+              currentTime --;
+              return -change / 2 * (currentTime * (currentTime - 2) - 1) + start;
+            }
 
             $scope.onWindowResize = function() {
               // delay for a bit to avoid running lots of times.
-              clearTimeout(winResizeTimeout);
-              winResizeTimeout = setTimeout(function(){
+              clearTimeout($scope.winResizeTimeout);
+              $scope.winResizeTimeout = setTimeout(function(){
                 $scope.reCalcAll();
                 $scope.$apply();
               }, 250);
             };
 
-            var cancelMouseDownInterval = function() {
-              isHolding = false;
+            $scope.cancelMouseDownInterval = function() {
+              $scope.isHolding = false;
 
-              if(mouseDownInterval) {
-                $interval.cancel(mouseDownInterval);
-                mouseDownInterval = null;
+              if($scope.mouseDownInterval) {
+                $interval.cancel($scope.mouseDownInterval);
+                $scope.mouseDownInterval = null;
               }
             };
 
             $scope.scrollButtonDown = function(direction, event) {
               event.stopPropagation();
-              isHolding = true;
+              $scope.isHolding = true;
 
-              var realScroll = direction === 'left' ? 0 - scrollByPixels : scrollByPixels;
-              $scope.tabContainer.scrollLeft += realScroll;
-              $scope.reCalcSides();
-
-              mouseDownInterval = $interval(function() {
-
-                if(isHolding) {
-                  $scope.tabContainer.scrollLeft += realScroll;
+              var realScroll = direction === 'left' ? 0 - $scope.scrollByPixels : $scope.scrollByPixels;
+              $scope.scrollTo($scope.tabContainer, realScroll, 150, function(){
+                $timeout(function(){
                   $scope.reCalcSides();
+                });
+              }, true);
+
+              $scope.mouseDownInterval = $interval(function() {
+
+                if($scope.isHolding) {
+                  $scope.scrollTo($scope.tabContainer, realScroll, 150, function(){
+                    $timeout(function(){
+                      $scope.reCalcSides();
+                    });
+                  }, true);
 
                   if(event.target.disabled) {
-                    cancelMouseDownInterval();
+                    $scope.cancelMouseDownInterval();
                   }
                 }
               }, 100);
             }
 
             $scope.scrollButtonUp = function() {
-              cancelMouseDownInterval();
+              $scope.cancelMouseDownInterval();
             }
 
             $scope.activateTab = function(tab) {
@@ -220,7 +219,7 @@ angular.module('ui.tab.scroll', [])
               $scope.disableRight = $scope.tabContainer.scrollLeft >= $scope.tabContainer.scrollWidth - $scope.tabContainer.offsetWidth;
               $scope.disableLeft = $scope.tabContainer.scrollLeft <= 0;
 
-              if(showTooltips){
+              if($scope.userShowTooltips){
                 $scope.reCalcTooltips();
               }
             };
@@ -261,29 +260,37 @@ angular.module('ui.tab.scroll', [])
 
             $scope.scrollTabIntoView = function(arg){
               if(!$scope.tabContainer || $scope.hideButtons)return;
+
               var argInt = parseInt(arg);
+              var tabToScroll;
+
+              // first we find the tab element.
               if(argInt) { // scroll tab index into view
                 var allTabs = $scope.tabContainer.querySelectorAll('li');
                 if(allTabs.length > argInt) { // only if its really exist
+                  tabToScroll = allTabs[argInt];
+                }
+              } else { // scroll selected tab into view
+                var activeTab = $scope.tabContainer.querySelector('li.active');
+                if(activeTab) {
+                  tabToScroll = activeTab;
+                }
+              }
 
-                  var to = allTabs[argInt].offsetLeft;
-                  var dif = to - $scope.tabContainer.scrollLeft - 25;
-                  scrollTo($scope.tabContainer,dif,700,function(){
+              // now let's scroll it into view.
+              if(tabToScroll) {
+                var rightPosition = parseInt(tabToScroll.getBoundingClientRect().left + tabToScroll.getBoundingClientRect().width - $scope.tabContainer.getBoundingClientRect().left);
+                var leftPosition = tabToScroll.getBoundingClientRect().left - $scope.tabContainer.getBoundingClientRect().left;
+                if (leftPosition < 0) {
+                  var dif = leftPosition - 20;
+                  $scope.scrollTo($scope.tabContainer, dif, 700, function(){
                     $timeout(function(){
                       $scope.reCalcSides();
                     });
                   });
-                  //allTabs[argInt].scrollIntoView(false);
-                }
-              }
-
-              else { // scroll selected tab into view
-                var activeTab = $scope.tabContainer.querySelector('li.active');
-                if(activeTab) {
-                  //activeTab.scrollIntoView(false);
-                  var to = activeTab.offsetLeft;
-                  var dif = to - $scope.tabContainer.scrollLeft - 25;
-                  scrollTo($scope.tabContainer,dif,700,function(){
+                } else if(rightPosition > $scope.tabContainer.offsetWidth){
+                  var dif = rightPosition - $scope.tabContainer.offsetWidth + 20;
+                  $scope.scrollTo($scope.tabContainer, dif, 700, function(){
                     $timeout(function(){
                       $scope.reCalcSides();
                     });
@@ -323,7 +330,7 @@ angular.module('ui.tab.scroll', [])
               if(!$scope.tabContainer)return;
 
               $scope.hideButtons = $scope.tabContainer.scrollWidth <= $scope.tabContainer.offsetWidth;
-              $scope.hideDropDown = showDropDown ? $scope.hideButtons : true;
+              $scope.hideDropDown = $scope.userShowDropDown ? $scope.hideButtons : true;
 
               if(!$scope.hideButtons) {
 
@@ -336,7 +343,7 @@ angular.module('ui.tab.scroll', [])
                       var heading = tab.getAttribute("data-tabScrollHeading");
                       var tabScope = angular.element(tab).isolateScope();
                       //push new field to use as title in the drop down.
-                      tabScope.tabScrollTitle = heading ? heading : tabScope.headingElement.textContent;
+                      tabScope.tabScrollTitle = heading ? heading : tab.textContent.trim();
                       $scope.dropdownTabs.push(tabScope);
                     }
                   });
@@ -359,4 +366,3 @@ angular.module('ui.tab.scroll', [])
           }
         };
       }]);
-

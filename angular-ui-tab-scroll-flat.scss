@@ -2,7 +2,7 @@
  * angular-ui-tab-scroll
  * https://github.com/VersifitTechnologies/angular-ui-tab-scroll
  *
- * Version: 2.2.0
+ * Version: 2.2.2
  * License: MIT
  */
 
@@ -162,11 +162,11 @@ $active-border-radius: 3px;
       }
     }
   }
-  > .btn-group {
+  > .dropdown {
     position: absolute;
     top: 0;
     right: 0;
-    > .btn:first-child {
+    > .dropdown-toggle {
       width: $button-width;
       line-height: $header-height;
       height: $header-height;
@@ -184,22 +184,6 @@ $active-border-radius: 3px;
         font-family: 'Glyphicons Halflings';
         content: '\e114';
         font-size: 10px;
-      }
-    }
-    .dropDownTabActiveMark:before {
-      font-family: 'Glyphicons Halflings';
-      content: '\e072';
-      padding-right: 7px;
-      font-size: 10px;
-      color: #777;
-    }
-    > .dropdown-menu {
-      min-width: 0;
-      box-shadow: 0 3px 6px rgba(0, 0, 0, .2);
-      > li {
-        > a {
-          padding: 3px 15px;
-        }
       }
     }
   }
@@ -223,6 +207,24 @@ $active-border-radius: 3px;
       }
     }
   }
+}
+
+.dropdown-menu {
+  min-width: 0;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, .2);
+  > li {
+    > a {
+      padding: 3px 15px;
+      > .dropDownTabActiveMark:before {
+        font-family: 'Glyphicons Halflings';
+        content: '\e072';
+        padding-right: 7px;
+        font-size: 10px;
+        color: #777;
+      }
+    }
+  }
+
 }
 
 /*make the tabs content be height 100%*/

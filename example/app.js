@@ -23,12 +23,6 @@ app.controller('MainCtrl', function() {
     };
   };
 
-  vm.activateTab = function(arg){
-    if(vm.scrlTabsApi.activateTab){
-      vm.scrlTabsApi.activateTab(arg);
-    }
-  };
-
   vm.addTab = function(){
     vm.tabs.push({
       heading: 'New Tab ' + vm.tabs.length,

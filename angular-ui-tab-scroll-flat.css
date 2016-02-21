@@ -2,7 +2,7 @@
  * angular-ui-tab-scroll
  * https://github.com/VersifitTechnologies/angular-ui-tab-scroll
  *
- * Version: 2.2.0
+ * Version: 2.2.2
  * License: MIT
  */
 .ui-tabs-scrollable {
@@ -90,11 +90,11 @@
       right: 0; }
       .ui-tabs-scrollable > .nav-button.right-nav-button:before {
         content: '\e080'; }
-  .ui-tabs-scrollable > .btn-group {
+  .ui-tabs-scrollable > .dropdown {
     position: absolute;
     top: 0;
     right: 0; }
-    .ui-tabs-scrollable > .btn-group > .btn:first-child {
+    .ui-tabs-scrollable > .dropdown > .dropdown-toggle {
       width: 20px;
       line-height: 35px;
       height: 35px;
@@ -108,21 +108,10 @@
       z-index: 10;
       border-radius: 0;
       border-bottom-color: #999; }
-      .ui-tabs-scrollable > .btn-group > .btn:first-child:before {
+      .ui-tabs-scrollable > .dropdown > .dropdown-toggle:before {
         font-family: 'Glyphicons Halflings';
         content: '\e114';
         font-size: 10px; }
-    .ui-tabs-scrollable > .btn-group .dropDownTabActiveMark:before {
-      font-family: 'Glyphicons Halflings';
-      content: '\e072';
-      padding-right: 7px;
-      font-size: 10px;
-      color: #777; }
-    .ui-tabs-scrollable > .btn-group > .dropdown-menu {
-      min-width: 0;
-      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2); }
-      .ui-tabs-scrollable > .btn-group > .dropdown-menu > li > a {
-        padding: 3px 15px; }
   .ui-tabs-scrollable.show-drop-down > .spacer:not(.hidden-buttons) {
     margin-right: calc(20px + 20px + 20px); }
     .ui-tabs-scrollable.show-drop-down > .spacer:not(.hidden-buttons) > div:first-child > .tab-content {
@@ -131,6 +120,18 @@
     right: 20px; }
   .ui-tabs-scrollable.show-drop-down > .nav-button.left-nav-button {
     right: calc(20px + 20px); }
+
+.dropdown-menu {
+  min-width: 0;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2); }
+  .dropdown-menu > li > a {
+    padding: 3px 15px; }
+    .dropdown-menu > li > a > .dropDownTabActiveMark:before {
+      font-family: 'Glyphicons Halflings';
+      content: '\e072';
+      padding-right: 7px;
+      font-size: 10px;
+      color: #777; }
 
 /*make the tabs content be height 100%*/
 .ui-tabs-scrollable > .spacer {
