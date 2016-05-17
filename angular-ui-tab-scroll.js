@@ -335,7 +335,7 @@ angular.module('ui.tab.scroll', [])
               if(!$scope.hideButtons) {
 
                 if(!$scope.hideDropDown) {
-                  var allTabs = $scope.tabContainer.querySelectorAll('li');
+                  var allTabs = $scope.tabContainer.querySelectorAll('li.uib-tab');
                   $scope.dropdownTabs = [];
                   angular.forEach(allTabs, function (tab) {
                     var ignore = tab.getAttribute("data-tabScrollIgnore");
