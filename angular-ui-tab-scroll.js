@@ -208,7 +208,7 @@ angular.module('ui.tab.scroll', [])
 
             $scope.activateTab = function(tab) {
               if(tab.disabled)return;
-              tab.active = true;
+              tab.select();
               $timeout(function () {
                 $scope.scrollTabIntoView();
               });
