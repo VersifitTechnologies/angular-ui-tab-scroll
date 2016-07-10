@@ -2,7 +2,7 @@
  * angular-ui-tab-scroll
  * https://github.com/VersifitTechnologies/angular-ui-tab-scroll
  *
- * Version: 2.2.3
+ * Version: 2.2.4
  * License: MIT
  */
 
@@ -68,6 +68,7 @@ angular.module('ui.tab.scroll', [])
             tooltipRightPlacement: '@',
             scrollBy: '@',
             autoRecalculate: '@',
+            isButtonsVisible: '=',
             api: '=?'
           },
 
@@ -162,6 +163,7 @@ angular.module('ui.tab.scroll', [])
               clearTimeout($scope.winResizeTimeout);
               $scope.winResizeTimeout = setTimeout(function(){
                 $scope.reCalcAll();
+				$scope.scrollTabIntoView();
                 $scope.$apply();
               }, 250);
             };
@@ -229,7 +231,7 @@ angular.module('ui.tab.scroll', [])
               var rightTooltips = [];
               var leftTooltips = [];
 
-              var allTabs = $scope.tabContainer.querySelectorAll('li');
+              var allTabs = $scope.tabContainer.querySelectorAll('ul.nav-tabs > li');
               angular.forEach(allTabs, function(tab) {
 
                 var rightPosition = parseInt(tab.getBoundingClientRect().left + tab.getBoundingClientRect().width - $scope.tabContainer.getBoundingClientRect().left);
@@ -266,7 +268,7 @@ angular.module('ui.tab.scroll', [])
 
               // first we find the tab element.
               if(argInt) { // scroll tab index into view
-                var allTabs = $scope.tabContainer.querySelectorAll('li');
+                var allTabs = $scope.tabContainer.querySelectorAll('ul.nav-tabs > li');
                 if(allTabs.length > argInt) { // only if its really exist
                   tabToScroll = allTabs[argInt];
                 }
@@ -331,11 +333,12 @@ angular.module('ui.tab.scroll', [])
 
               $scope.hideButtons = $scope.tabContainer.scrollWidth <= $scope.tabContainer.offsetWidth;
               $scope.hideDropDown = $scope.userShowDropDown ? $scope.hideButtons : true;
+              $scope.isButtonsVisible = !$scope.hideButtons;
 
               if(!$scope.hideButtons) {
 
                 if(!$scope.hideDropDown) {
-                  var allTabs = $scope.tabContainer.querySelectorAll('li');
+                  var allTabs = $scope.tabContainer.querySelectorAll('ul.nav-tabs > li');
                   $scope.dropdownTabs = [];
                   angular.forEach(allTabs, function (tab) {
                     var ignore = tab.getAttribute("data-tabScrollIgnore");
