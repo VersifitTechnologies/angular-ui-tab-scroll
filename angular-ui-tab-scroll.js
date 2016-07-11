@@ -2,7 +2,7 @@
  * angular-ui-tab-scroll
  * https://github.com/VersifitTechnologies/angular-ui-tab-scroll
  *
- * Version: 2.2.6
+ * Version: 2.2.7
  * License: MIT
  */
 
@@ -68,7 +68,7 @@ angular.module('ui.tab.scroll', [])
             tooltipRightPlacement: '@',
             scrollBy: '@',
             autoRecalculate: '@',
-            isButtonsVisible: '=',
+            isButtonsVisible: '=?',
             api: '=?'
           },
 
