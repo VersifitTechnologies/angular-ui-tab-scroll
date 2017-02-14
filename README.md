@@ -87,6 +87,7 @@ Example:
   content: '\e080';
 }
 ```
+the drop-down can be given a class by using the dropDownClass property.
 
 ### Dependencies
 * AngularJS
