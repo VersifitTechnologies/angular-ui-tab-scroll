@@ -89,6 +89,8 @@ Example:
 ```
 the drop-down can be given a class by using the dropDownClass property.
 
+the drop-down menu can be given a class by using the dropDownMenuClass property.
+
 ### Dependencies
 * AngularJS
 * UI Bootstrap
