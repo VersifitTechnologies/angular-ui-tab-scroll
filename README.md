@@ -29,6 +29,7 @@ Here is a working demo : http://plnkr.co/edit/YJNDaQ?p=preview
 * `tooltip-right-placement` - which tooltip direction to use for the right button tooltip (bottom, top, left, right). default is `left`.
 * `scroll-by` - the amount of pixels to offset upon each scroll. default is `50`.
 * `auto-recalculate` - whether or not to watch the tabs collection for changes to initiate a re-calculation. default is `false`. important! see warning below
+* `drop-down-header-template-url` - set custom header inside the drop-down. default is empty.
 
 And additional attributes you can set on an individual tab:
 * `data-tabScrollIgnore` - if there is 'data-tabScrollIgnore="true"' on a tab than it will not be shown in the drop-down.
@@ -87,9 +88,11 @@ Example:
   content: '\e080';
 }
 ```
-the drop-down can be given a class by using the dropDownClass property.
+the drop-down can be given a class by using the `drop-down-class` property.
 
-the drop-down menu can be given a class by using the dropDownMenuClass property.
+the drop-down menu can be given a class by using the `drop-down-menu-class` property.
+
+the drop-down menu header can be given a class by using the `drop-down-header-class` property.
 
 ### Dependencies
 * AngularJS
