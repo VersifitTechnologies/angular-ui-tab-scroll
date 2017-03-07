@@ -2,7 +2,7 @@
  * angular-ui-tab-scroll
  * https://github.com/VersifitTechnologies/angular-ui-tab-scroll
  *
- * Version: 2.3.0
+ * Version: 2.3.1
  * License: MIT
  */
 .ui-tabs-scrollable {
@@ -103,4 +103,3 @@
       .ui-tabs-scrollable > .spacer > div:first-child > .tab-content > .active {
         height: 100%;
         overflow: auto; }
-

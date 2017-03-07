@@ -18,6 +18,13 @@
       text-align: center;
       padding-top: 50px
     }
+    .menuHeader{
+      padding: 5px 0 10px 15px;
+    }
+    .menuHeader a{
+      padding-right: 5px;
+      font-size: 10px;
+    }
   </style>
 
 
@@ -29,7 +36,9 @@
   <a href="https://github.com/VersifitTechnologies/angular-ui-tab-scroll">https://github.com/VersifitTechnologies/angular-ui-tab-scroll</a>
 
   <br/><br/><br/><br/>
-  <scrollable-tabset api="main.scrlTabsApi" tooltip-left-placement="top">
+  <scrollable-tabset api="main.scrlTabsApi" tooltip-left-placement="top"
+                     drop-down-header-template-url="menuHeaderTemplate"
+                     drop-down-header-class="menuHeader">
     <uib-tabset style="height: 300px">
       <uib-tab>
         <uib-tab-heading>First tab</uib-tab-heading>
@@ -45,6 +54,13 @@
       </uib-tab>
     </uib-tabset>
   </scrollable-tabset>
+
+  <script type="text/ng-template" id="menuHeaderTemplate">
+    <div>
+      <a href="#">something</a>
+      <a href="#">nothing</a>
+    </div>
+  </script>
 
   <br/><br/><br/><br/><br/><br/>
   <button type="button" class="btn btn-default" ng-click="main.addTab()">add tab</button>
