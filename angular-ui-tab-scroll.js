@@ -2,7 +2,7 @@
  * angular-ui-tab-scroll
  * https://github.com/VersifitTechnologies/angular-ui-tab-scroll
  *
- * Version: 2.3.1
+ * Version: 2.3.2
  * License: MIT
  */
 
@@ -87,7 +87,7 @@ angular.module('ui.tab.scroll', [])
               ' tooltip-placement="{{tooltipRightDirection}}" uib-tooltip-html="tooltipRightHtml"></button>',
               '<div class="btn-group" ng-class="::dropDownClass" uib-dropdown dropdown-append-to-body ng-hide="hideDropDown">',
                 '<button type="button" class="btn" uib-dropdown-toggle></button>',
-                '<ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu" ng-class="::dropDownMenuClass">',
+                '<ul class="dropdown-menu" uib-dropdown-menu role="menu" ng-class="::dropDownMenuClass||\'dropdown-menu-right\'">',
                   '<li ng-class="::dropDownHeaderClass" ng-include="::dropDownHeaderTemplateUrl"></li>',
                   '<li role="menuitem" ng-repeat="tab in dropdownTabs" ng-class="{\'disabled\': tab.disabled, \'active\': tab.active}" ng-click="activateTab(tab)">',
                     '<a href><span class="dropDownTabActiveMark" ng-style="{\'visibility\': tab.active?\'visible\':\'hidden\'}"></span>{{tab.tabScrollTitle}}</a>',
