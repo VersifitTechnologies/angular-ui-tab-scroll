@@ -2,7 +2,7 @@
  * angular-ui-tab-scroll
  * https://github.com/VersifitTechnologies/angular-ui-tab-scroll
  *
- * Version: 2.3.2
+ * Version: 2.3.3
  * License: MIT
  */
 
@@ -16,7 +16,8 @@ angular.module('ui.tab.scroll', [])
             tooltipLeftPlacement: 'right',
             tooltipRightPlacement: 'left',
             scrollBy: '50',
-            autoRecalculate: false
+            autoRecalculate: false,
+            leftScrollAddition: '0'
           };
 
           var config = angular.extend({}, defaultConfig);
@@ -40,6 +41,9 @@ angular.module('ui.tab.scroll', [])
             setAutoRecalculate : function(value){
               config.autoRecalculate = (value == true);
             },
+            setLeftScrollAddition : function(value){
+                config.leftScrollAddition = value;
+            },
             $get: function(){
               return {
                 showDropDown: config.showDropDown,
@@ -47,7 +51,8 @@ angular.module('ui.tab.scroll', [])
                 tooltipLeftPlacement: config.tooltipLeftPlacement,
                 tooltipRightPlacement: config.tooltipRightPlacement,
                 scrollBy: config.scrollBy,
-                autoRecalculate: config.autoRecalculate
+                autoRecalculate: config.autoRecalculate,
+                leftScrollAddition: config.leftScrollAddition
               };
             }
           };
@@ -73,7 +78,8 @@ angular.module('ui.tab.scroll', [])
             dropDownMenuClass: '@?',
             dropDownHeaderTemplateUrl: '@?',
             dropDownHeaderClass: '@?',
-            api: '=?'
+            api: '=?',
+            leftScrollAddition: '@'
           },
 
           template: [
@@ -114,6 +120,7 @@ angular.module('ui.tab.scroll', [])
             $scope.userShowDropDown = $scope.showDropDown ? $scope.showDropDown === 'true' : scrollableTabsetConfig.showDropDown;
             $scope.userShowTooltips = $scope.showTooltips ? $scope.showTooltips === 'true' : scrollableTabsetConfig.showTooltips == true;
             $scope.scrollByPixels = parseInt($scope.scrollBy ? $scope.scrollBy : scrollableTabsetConfig.scrollBy);
+            $scope.leftScrollAdditionPixels = parseInt($scope.leftScrollAddition ? $scope.leftScrollAddition : scrollableTabsetConfig.leftScrollAddition);
 
             $scope.api = {
               doRecalculate: function(){
@@ -289,7 +296,7 @@ angular.module('ui.tab.scroll', [])
                 var rightPosition = parseInt(tabToScroll.getBoundingClientRect().left + tabToScroll.getBoundingClientRect().width - $scope.tabContainer.getBoundingClientRect().left);
                 var leftPosition = tabToScroll.getBoundingClientRect().left - $scope.tabContainer.getBoundingClientRect().left;
                 if (leftPosition < 0) {
-                  var dif = leftPosition - 20;
+                  var dif = leftPosition - 20 - $scope.leftScrollAdditionPixels;
                   $scope.scrollTo($scope.tabContainer, dif, 700, function(){
                     $timeout(function(){
                       $scope.reCalcSides();
