@@ -2,7 +2,7 @@
  * angular-ui-tab-scroll
  * https://github.com/VersifitTechnologies/angular-ui-tab-scroll
  *
- * Version: 2.3.3
+ * Version: 2.3.4
  * License: MIT
  */
 
@@ -295,7 +295,7 @@ angular.module('ui.tab.scroll', [])
               if(tabToScroll) {
                 var rightPosition = parseInt(tabToScroll.getBoundingClientRect().left + tabToScroll.getBoundingClientRect().width - $scope.tabContainer.getBoundingClientRect().left);
                 var leftPosition = tabToScroll.getBoundingClientRect().left - $scope.tabContainer.getBoundingClientRect().left;
-                if (leftPosition < 0) {
+                if (leftPosition - $scope.leftScrollAdditionPixels < 0) {
                   var dif = leftPosition - 20 - $scope.leftScrollAdditionPixels;
                   $scope.scrollTo($scope.tabContainer, dif, 700, function(){
                     $timeout(function(){
