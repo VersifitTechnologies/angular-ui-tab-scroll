@@ -33,3 +33,5 @@ bower_components
 
 # ignore css map files.
 *.css.map
+
+package-lock.json

@@ -2,7 +2,7 @@
  * angular-ui-tab-scroll
  * https://github.com/VersifitTechnologies/angular-ui-tab-scroll
  *
- * Version: 2.3.4
+ * Version: 2.3.5
  * License: MIT
  */
 
@@ -362,10 +362,14 @@ angular.module('ui.tab.scroll', [])
                       $scope.dropdownTabs.push(tabScope);
                     }
                   });
+                } else {
+                  $scope.dropdownTabs = [];
                 }
 
                 $scope.reCalcSides();
-              }
+              } else {
+                  $scope.dropdownTabs = [];
+                }
             };
 
             // this is how we init for the first time.
@@ -376,6 +380,7 @@ angular.module('ui.tab.scroll', [])
             // when scope destroyed
             $scope.$on('$destroy', function () {
               angular.element($window).off('resize', $scope.onWindowResize);
+              $scope.dropdownTabs = [];
             });
 
           }
